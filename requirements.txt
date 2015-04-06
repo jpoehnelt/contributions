@@ -1,0 +1,4 @@
+# this is only for ide's...
+webapp2
+jinja
+googleappengine
