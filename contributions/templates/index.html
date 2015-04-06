@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% block content%}
-    {% if user %}
-        <h1>Hello {{ user }}!</h1>
-    {%else %}
-        <h1>Hello World!</h1>
-    {% endif %}!
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            {% if user %}
+            <h1>Hello {{ user }}!</h1>
+            {%else %}
+            <h1>Hello World!</h1>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
