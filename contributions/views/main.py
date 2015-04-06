@@ -1,7 +1,6 @@
-from contributions.views import render_template
-import webapp2
+from contributions.views import Request
 
 
-class MainPage(webapp2.RequestHandler):
+class MainPage(Request):
     def get(self):
-        self.response.write(render_template('index.html'))
+        self.render('index.html')
