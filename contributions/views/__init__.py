@@ -25,6 +25,7 @@ class Request(webapp2.RequestHandler):
         if context is None:
             context = {}
 
-        context['user'] = self.user
+        if self.user:
+            context['user'] = self.user
 
         self.response.write(JINJA_ENVIRONMENT.get_template(template).render(context))
