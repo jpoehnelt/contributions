@@ -1,0 +1,14 @@
+language: python
+python:
+  - "2.7"
+
+before_script:
+- wget https://googleappengine.googlecode.com/files/google_appengine_1.8.9.zip -nv
+- unzip -q google_appengine_1.8.9.zip
+- mv google_appengine/google google
+
+script:
+ nosetests tests/__init__.py --cover-package=contributions --with-coverage
+
+after_success:
+  coveralls
