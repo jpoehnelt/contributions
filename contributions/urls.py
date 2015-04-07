@@ -1,5 +1,8 @@
 from views.main import MainPage
+from views.api.project import ProjectApi
 
-routes =[
-    ('/', MainPage)
+
+routes = [
+    ('/', MainPage),
+    ('/api/project', ProjectApi)
 ]
