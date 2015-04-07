@@ -13,7 +13,7 @@ before_script:
 - mv google_appengine/google google
 
 script:
- nosetests tests/__init__.py --cover-package=contributions --with-coverage
+ nosetests tests/ --nocapture --cover-package=contributions --with-coverage
 
 after_success:
   coveralls
