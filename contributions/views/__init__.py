@@ -2,7 +2,7 @@ from contributions.settings import JINJA_ENVIRONMENT
 import webapp2
 from google.appengine.api import users
 from contributions.utils.serializers import JSONEncoder
-
+import json
 
 class Request(webapp2.RequestHandler):
     """
@@ -14,6 +14,10 @@ class Request(webapp2.RequestHandler):
 
         # call parent class to initialize
         super(Request, self).__init__(*args, **kwargs)
+
+        if 'Content-Type' in self.request.headers and \
+                        self.request.headers['Content-Type'] == 'application/json':
+            self.request.json = json.loads(self.request.body)
 
     def render(self, template, context=None):
         """
@@ -30,7 +34,3 @@ class Request(webapp2.RequestHandler):
             context['user'] = self.user
 
         self.response.write(JINJA_ENVIRONMENT.get_template(template).render(context))
-
-    def jsonify(self, data):
-        self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(JSONEncoder().encode(data))
