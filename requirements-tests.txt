@@ -2,3 +2,4 @@ webapp2
 webob
 webtest
 jinja2
+pillow
