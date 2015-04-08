@@ -28,31 +28,17 @@ class TestCommitApi(unittest.TestCase):
     def test_post(self):
         data = {
             "id": "1231lkjdafd-Random-Hash-1231231",
-            "repo_id": "justinwp/reponame",
-            "contributor_id": 'justinwp',
+            "project": 1231231,
+            "contributor": 123123,
             "date": "2015-01-23T16:05:50Z",
             "message": "bad commit message here",
             "changes": 5,
             "additions": 2,
             "deletions": 3,
-            "python_changes": 2,
-            "python_additions": 1,
-            "python_deletions": 1,
-            "js_changes": 1,
-            "js_additions": 0,
-            "js_deletions": 1,
-            "html_changes": 1,
-            "html_additions": 1,
-            "html_deletions": 0,
-            "other_changes": 1,
-            "other_additions": 1,
-            "other_deletions": 0,
         }
 
         response = self.test_app.post('/api/commit', params=json.dumps(data),
                                       headers=JSON_HEADERS, status=201)
-
-        self.assertDictEqual(data, response.json)
 
         # Test Duplicate Response
         response = self.test_app.post('/api/commit', params=json.dumps(data),

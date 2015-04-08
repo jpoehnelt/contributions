@@ -23,19 +23,33 @@ class TestContributorApi(unittest.TestCase):
         self.assertIsInstance(response.json['objects'], list)
 
     def test_get_single(self):
-        pass
-
-    def test_post(self):
         data = {
-            "id": "justinwp",
+            "id": 123123,
             "email": "email@something.com",
             "name": "Justin Poehnelt",
+            "username": "justinwp",
             "avatar_url": "https://avatars.githubusercontent.com/u/3392975?v=3"
         }
 
         response = self.test_app.post('/api/contributor', params=json.dumps(data),
                                       headers=JSON_HEADERS, status=201)
 
+        print response.json
+        response = self.test_app.get('/api/contributor/%d'% data['id'], status=200)
+        print response
+
+    def test_post(self):
+        data = {
+            "id": 123123,
+            "email": "email@something.com",
+            "name": "Justin Poehnelt",
+            "username": "justinwp",
+            "avatar_url": "https://avatars.githubusercontent.com/u/3392975?v=3"
+        }
+
+        response = self.test_app.post('/api/contributor', params=json.dumps(data),
+                                      headers=JSON_HEADERS, status=201)
+        print response.json
         self.assertDictEqual(data, response.json)
 
         # Test Duplicate Response
