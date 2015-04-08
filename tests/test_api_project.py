@@ -27,7 +27,9 @@ class TestProjectApi(unittest.TestCase):
 
     def test_post(self):
         data = {
-            "id": "user/name",
+            "id": 123123123,
+            "owner": "user",
+            "name": "some-repo1",
             "project_number": 1,
             "commit_count": 205
         }
@@ -44,7 +46,7 @@ class TestProjectApi(unittest.TestCase):
 
         # Test Missing Attribute
         bad_data = {
-            "id": "user/name",
+            "id": 12312312112323,
         }
         response = self.test_app.post('/api/project', params=json.dumps(bad_data),
                                       headers=JSON_HEADERS, status=400)
