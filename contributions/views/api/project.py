@@ -1,6 +1,7 @@
 from contributions.views.api import ApiRequest
 from contributions.models.project import Project
 from contributions.utils.decorators import required_json_attributes
+from contributions.exceptions import NotFoundException
 
 
 class ProjectApi(ApiRequest):
@@ -13,7 +14,9 @@ class ProjectApi(ApiRequest):
                 "page": 1
             }
         else:
-            data = Project.get_by_id(id)
+            data = Project.get_by_id(int(id))
+            if data is None:
+                raise NotFoundException
 
         self.jsonify(data)
 
@@ -23,10 +26,12 @@ class ProjectApi(ApiRequest):
         project = Project.insert(**data)
         self.jsonify(project, 201)
 
+    @required_json_attributes('id')
     def put(self, id=None):
         # TODO
         self.abort(501)
 
+    @required_json_attributes('id')
     def delete(self, id=None):
         # TODO
         self.abort(501)
