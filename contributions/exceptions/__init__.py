@@ -7,6 +7,12 @@ class JSONHTTPException(HTTPException):
         return dict(error=self.error, code=self.code)
 
 
+class NotFoundException(JSONHTTPException):
+    def __init__(self):
+        self.error = "Entity Not Found"
+        self.code = 404
+
+
 class DuplicateEntity(JSONHTTPException):
     def __init__(self):
         self.error = "Duplicate Entity"
