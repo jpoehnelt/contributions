@@ -4,6 +4,7 @@ from google.appengine.api import users
 from contributions.utils.serializers import JSONEncoder
 import json
 
+
 class Request(webapp2.RequestHandler):
     """
     Added functionality includes injecting user and shortcut for jinja rendering
@@ -16,7 +17,7 @@ class Request(webapp2.RequestHandler):
         super(Request, self).__init__(*args, **kwargs)
 
         if 'Content-Type' in self.request.headers and \
-                        self.request.headers['Content-Type'] == 'application/json':
+            self.request.headers['Content-Type'] == 'application/json':
             self.request.json = json.loads(self.request.body)
 
     def render(self, template, context=None):
