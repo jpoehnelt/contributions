@@ -4,9 +4,10 @@ from datetime import datetime, date, time
 
 
 class JSONEncoder(json.JSONEncoder):
-
+    """
+    Custom json encoder class to handle ndb.Model, ndb.Key etc...
+    """
     def default(self, o):
-        print o
         if isinstance(o, ndb.Key):
             o = ndb.Key.get(o)
         if isinstance(o, ndb.Model):
