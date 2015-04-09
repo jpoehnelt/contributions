@@ -4,23 +4,26 @@ from contributions.exceptions import DuplicateEntity
 
 class CustomModel(ndb.Model):
     """
-    Add a few more methods that are more compatible with a rest api.
+    Add a few more methods that are more compatible with a rest api and enforcement of entity
+    integrity.
     """
 
     @classmethod
     def get_all(cls):
+        """
+        Returns all entities of type cls.
+        :return:
+        """
         return cls.query().fetch()
-
-    @classmethod
-    def get_instance(cls, id):
-        return cls.get_by_id(id)
 
     @classmethod
     @ndb.transactional(retries=1)
     def insert(cls, **kwargs):
         """
-         This method does not allow overwriting entities and raises an exception if the entity
-         already exists.
+         This method works within an atomic transaction does not allow overwriting entities.
+         It raises an exception if the entity already exists. Google ndb would simply overwrite the
+         existing entity otherwise.
+         :return: entity
         """
         # Unique Key
 
@@ -46,5 +49,11 @@ class CustomModel(ndb.Model):
     @classmethod
     @ndb.transactional(retries=1)
     def update(cls, **kwargs):
+        """
+        Checks if an entity exists and if it does, it updates and returns the entity. If entity
+        does not exist, raise an exception.
+        :param kwargs:
+        :return: entity
+        """
         pass
         #todo
