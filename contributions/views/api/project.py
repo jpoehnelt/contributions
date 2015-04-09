@@ -6,6 +6,14 @@ from contributions.exceptions import NotFoundException
 
 class ProjectApi(ApiRequest):
     def get(self, id=None):
+        """
+        This method gets one or all projects and returns the projects as json.
+        :param id:
+        :return:
+        """
+
+        # TODO Implement filtering. /api/project?project_number=2
+
         if id is None:
             all_projects = Project.get_all()
             data = {
@@ -20,15 +28,26 @@ class ProjectApi(ApiRequest):
 
         self.jsonify(data)
 
-    @required_json_attributes('id', 'project_number')
+    @required_json_attributes('id', 'name', 'owner', 'project_number')
     def post(self, id=None):
+        """
+        Inserts a new entity into the data store.
+        :param id:
+        :return:
+        """
         data = self.request.json
         project = Project.insert(**data)
         self.jsonify(project, 201)
 
     @required_json_attributes('id')
     def put(self, id=None):
-        # TODO
+        """
+        Updates an existing entity. Creates json response of updated entity.
+        :param id:
+        :return:
+        """
+        # TODO Be careful since this is different than sql and will create a new entity if none exists.
+        # Uses custom update method in custom model.
         self.abort(501)
 
     @required_json_attributes('id')

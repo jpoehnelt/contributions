@@ -21,17 +21,32 @@ class ContributorApi(ApiRequest):
 
     @required_json_attributes('id', 'username', 'name', 'email')
     def post(self, id=None):
+        """
+        Inserts a new entity into the data store.
+        :param id:
+        :return:
+        """
         data = self.request.json
         project = Contributor.insert(**data)
-        print project
         self.jsonify(project, 201)
 
     @required_json_attributes('id')
     def put(self, id=None):
-        # TODO
+        """
+        Updates an existing entity. Creates json response of updated entity.
+        :param id:
+        :return:
+        """
+        # TODO Be careful since this is different than sql and will create a new entity if none exists.
+        # Uses custom update method in custom model.
         self.abort(501)
 
     @required_json_attributes('id')
     def delete(self, id=None):
-        # TODO
-        self.abort(501)
+        """
+        Deletes the entity.
+        :param id:
+        :return: None
+        """
+        #TODO
+        # self.abort(501)
