@@ -12,9 +12,17 @@ COMMIT_API_URL = 'http://contributions-907.appspot.com/api/commit'
 
 GITHUB_REPOS = [
     ['justinwp/cs399-band'],
-    [],
-    [],
-    [],
+    ['ErinBailey/cs399-social'],
+    ['alexlanza/cs399_agency'],
+    ['mkgilbert/cs399_the_theatre'],
+    ['alecdavidson/joyful-waves'],
+    ['coop741/CS399Social'],
+    ['DylanGrayson/Agency_Proj3'],
+    ['lmk243/BandProject'],
+    ['dukeayers/cs399_theater'],
+    ['c1phr/cs399_band'],
+    ['sk367/cs399_Theater'],
+    ['Adam-Thomas/Theatre-Proj2']
 ]
 
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
