@@ -36,7 +36,8 @@ def get_repo(repo_name, project_number):
         "project_number": project_number,
         "repo_name": repo_name
     }
-    response = requests.post(PROJECT_API_URL, data=json.dumps(data))
+    '''
+    response = requests.post(PROJECT_API_URL, data=json.dumps(data), auth=('cs399contributions', 'contributions399'))
 
     # error handling for posting project
 
@@ -44,12 +45,12 @@ def get_repo(repo_name, project_number):
         pass
     elif response.status_code == 409:
         # already exists
-        response = requests.get(PROJECT_API_URL + "/%s" % repo_name)
+        response = requests.get(PROJECT_API_URL + "/%s" % repo_name, auth=('cs399contributions', 'contributions399'))
     else:
         raise Exception()
 
     project = response.json
-
+    '''
     # get all of the commits and contributors from the commits
     parse_commits(project)
 
