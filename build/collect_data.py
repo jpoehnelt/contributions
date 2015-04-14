@@ -27,7 +27,7 @@ GITHUB_REPOS = [
 
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
-
+'''
 def get_repo(repo_name, project_number):
     print "Getting Repo: %s" % repo_name
 
@@ -36,7 +36,7 @@ def get_repo(repo_name, project_number):
         "project_number": project_number,
         "repo_name": repo_name
     }
-    '''
+
     response = requests.post(PROJECT_API_URL, data=json.dumps(data), auth=('cs399contributions', 'contributions399'))
 
     # error handling for posting project
@@ -50,7 +50,7 @@ def get_repo(repo_name, project_number):
         raise Exception()
 
     project = response.json
-    '''
+
     # get all of the commits and contributors from the commits
     parse_commits(project)
 
@@ -77,8 +77,13 @@ def parse_commits(project):
     """
     project['commit_count'] = 0
     print "Getting Commits for: %s" % project['repo_name']
-    # TODO get list of all commits from all pages
+    '''
+for project in GITHUB_REPOS:
+    print("Fetching commits for project: "+(''.join(project)))
+    r = requests.get('https://api.github.com/repos/'+(''.join(project))+'/commits', auth=('cs399contributions', 'contributions399'))
+    print(r.text)
 
+'''
     # TODO Parse commit
     # Add students found
 
@@ -99,3 +104,4 @@ if __name__ == "__main__":
 
         for project in project_list:
             get_repo(project, project_number)
+'''
