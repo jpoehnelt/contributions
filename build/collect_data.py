@@ -10,33 +10,19 @@ PROJECT_API_URL = 'http://contributions-907.appspot.com/api/project'
 STUDENT_API_URL = 'http://contributions-907.appspot.com/api/student'
 COMMIT_API_URL = 'http://contributions-907.appspot.com/api/commit'
 
-GITHUB_REPOS = [
-    ['justinwp/cs399-band'],
-    ['ErinBailey/cs399-social'],
-    ['alexlanza/cs399_agency'],
-    ['mkgilbert/cs399_the_theatre'],
-    ['alecdavidson/joyful-waves'],
-    ['coop741/CS399Social'],
-    ['DylanGrayson/Agency_Proj3'],
-    ['lmk243/BandProject'],
-    ['dukeayers/cs399_theater'],
-    ['c1phr/cs399_band'],
-    ['c1phr/cs399_theatre'],
-    ['sk367/cs399_Theater'],
-    ['Adam-Thomas/Theatre-Proj2'],
-    ['DylanGrayson/CS399_TheBand'],
-    ['DylanGrayson/social_proj4'],
-    ['kyleamcginn88/Agency'],
-    ['cap377/cs399final'],
-    ['brandonparee/theTheatre'],
-    ['brandonparee/theAgency'],
-    ['cmh553/cs399_social'],
-    ['dukeayers/cs399_SocialMedia'],
-    ['dukeayers/cs399_agency'],
-    ['yourbuddyconner/cs399-social'],
-    ['yourbuddyconner/cs399-theatre']
-]
 
+GITHUB_REPOS = [
+    #band
+    ['justinwp/cs399-band','alecdavidson/joyful-waves','lmk243/BandProject','c1phr/cs399_band','DylanGrayson/CS399_TheBand'],
+    #theatre
+    ['mkgilbert/cs399_the_theatre','dukeayers/cs399_theater','c1phr/cs399_theatre','sk367/cs399_Theater','Adam-Thomas/Theatre-Proj2','brandonparee/theTheatre','yourbuddyconner/cs399-theatre'],
+    #agency
+    ['alexlanza/cs399_agency','DylanGrayson/Agency_Proj3','kyleamcginn88/Agency','brandonparee/theAgency','dukeayers/cs399_agency'],
+    #social
+    ['ErinBailey/cs399-social','coop741/CS399Social','DylanGrayson/social_proj4','cmh553/cs399_social','dukeayers/cs399_SocialMedia','yourbuddyconner/cs399-social'],
+    #final
+    ['cap377/cs399final']
+]
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
 '''
@@ -90,10 +76,19 @@ def parse_commits(project):
     project['commit_count'] = 0
     print "Getting Commits for: %s" % project['repo_name']
     '''
+
+#Fetch commits
+for i, proj_number in enumerate(GITHUB_REPOS):
+    print("Tracking "+str(len(proj_number))+ " Project#"+str(i)+" files")
+    i += 1
+
 for project in GITHUB_REPOS:
     print("Fetching commits for project: "+(''.join(project)))
     r = requests.get('https://api.github.com/repos/'+(''.join(project))+'/commits', auth=('cs399contributions', 'contributions399'))
-    print(r.text)
+    json_contrib = json.loads(r.text)
+    print(json_contrib)
+
+    #print(json_contrib)
 
 '''
     # TODO Parse commit
