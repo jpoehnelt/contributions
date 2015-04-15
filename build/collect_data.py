@@ -13,15 +13,15 @@ COMMIT_API_URL = 'http://contributions-907.appspot.com/api/commit'
 
 GITHUB_REPOS = [
     #band
-    ['Adam-Thomas/Band-Proj1','alecdavidson/joyful-waves','AustinAbhari/CS399_TheBand','c1phr/cs399_band','cmh553/theBand','DylanGrayson/CS399_TheBand','itj3/bandPage','justinwp/cs399-band','kbullins/CS399Band','lmk243/BandProject','sk367/cs399_band','smashfligaeta/CS399_TheBand'],
+    ['Adam-Thomas/Band-Proj1','alecdavidson/joyful-waves','AustinAbhari/CS399_TheBand','c1phr/cs399_band','cmh553/theBand','DylanGrayson/CS399_TheBand','itj3/bandPage','justinwp/cs399-band','kbullins/CS399Band','lf237/band','lmk243/BandProject','sk367/cs399_band','smashfligaeta/CS399_TheBand'],
     #theatre
     ['Adam-Thomas/Theatre-Proj2','brandonparee/theTheatre','c1phr/cs399_theatre','dukeayers/cs399_theater','FlintyFalcon/Project2','kyleamcginn88/Theatre','lf237/theatre','mkgilbert/cs399_the_theatre','sk367/cs399_Theater','yourbuddyconner/cs399-theatre'],
     #agency
-    ['alexlanza/cs399_agency','brandonparee/theAgency','dukeayers/cs399_agency','DylanGrayson/Agency_Proj3','kyleamcginn88/Agency'],
+    ['alexlanza/cs399_agency','brandonparee/theAgency','dukeayers/cs399_agency','DylanGrayson/Agency_Proj3','lf237/agency','kyleamcginn88/Agency','vtsyms/CS399Agency','yourbuddyconner/cs399-agency'],
     #social
-    ['cmh553/cs399_social','coop741/CS399Social','DylanGrayson/social_proj4','dukeayers/cs399_SocialMedia','ErinBailey/cs399-social','yourbuddyconner/cs399-social'],
+    ['cmh553/cs399_social','coop741/CS399Social','c1phr/cs399_social','DylanGrayson/social_proj4','dukeayers/cs399_SocialMedia','ErinBailey/cs399-social','yourbuddyconner/cs399-social'],
     #final
-    ['cap377/cs399final']
+    ['breadraptor/cs399_final','cap377/cs399final','EduardoIniguez/CS399-final']
 ]
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
@@ -89,7 +89,6 @@ for proj_number in GITHUB_REPOS:
         json_contrib = json.loads(r.text)
         print(json_contrib)
 
-    #print(json_contrib)
 
 '''
     # TODO Parse commit
