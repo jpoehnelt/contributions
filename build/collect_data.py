@@ -21,8 +21,20 @@ GITHUB_REPOS = [
     ['lmk243/BandProject'],
     ['dukeayers/cs399_theater'],
     ['c1phr/cs399_band'],
+    ['c1phr/cs399_theatre'],
     ['sk367/cs399_Theater'],
-    ['Adam-Thomas/Theatre-Proj2']
+    ['Adam-Thomas/Theatre-Proj2'],
+    ['DylanGrayson/CS399_TheBand'],
+    ['DylanGrayson/social_proj4'],
+    ['kyleamcginn88/Agency'],
+    ['cap377/cs399final'],
+    ['brandonparee/theTheatre'],
+    ['brandonparee/theAgency'],
+    ['cmh553/cs399_social'],
+    ['dukeayers/cs399_SocialMedia'],
+    ['dukeayers/cs399_agency'],
+    ['yourbuddyconner/cs399-social'],
+    ['yourbuddyconner/cs399-theatre']
 ]
 
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
