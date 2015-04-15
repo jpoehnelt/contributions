@@ -77,17 +77,23 @@ def parse_commits(project):
     print "Getting Commits for: %s" % project['repo_name']
     '''
 
-#Fetch commits
+#how many repos are we tracking per project?
 for i, proj_number in enumerate(GITHUB_REPOS):
     print("Tracking "+str(len(proj_number))+ " Project#"+str(i)+" files")
     i += 1
 
+#fetch commit log
 for proj_number in GITHUB_REPOS:
+    #for each repo we have
     for project in proj_number:
         print("Fetching commits for project: "+(''.join(project)))
+        #get commit log
         r = requests.get('https://api.github.com/repos/'+(''.join(project))+'/commits', auth=('cs399contributions', 'contributions399'))
+        #convert JSON string into Python nested dictionary/list
         json_contrib = json.loads(r.text)
-        print(json_contrib)
+        #print commit log indented
+        print(json.dumps(json_contrib, indent=4))
+
 
 
 '''
