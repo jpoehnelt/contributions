@@ -12,6 +12,7 @@ routes = [
     ('/about', AboutPage),
     ('/contact', ContactPage),
     ('/projects', ProjectsPage),
+    ('/projects/(\d+)', ProjectsPage),
     ('/api/project', ProjectApi),
     ('/api/project/(\d+)', ProjectApi),
     ('/api/commit', CommitApi),
