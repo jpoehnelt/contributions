@@ -18,10 +18,21 @@ class CommitApi(ApiRequest):
         # TODO Implement filtering. /api/commits?project=1231231
 
         if id is None:
-            all_commits = Commit.get_all()
+            qry = Commit.query()
+
+            if 'project_id' in self.request.GET:
+                # /api/commit?project_id=123
+                qry.filter()
+
+            if 'contributor_id' in self.request.GET:
+                # /api/commit?contributor_id=123
+                qry.filter()
+            
+
+            commits = qry.fetch()
             data = {
-                "objects": all_commits,
-                "num_results": len(all_commits),
+                "objects": commits,
+                "num_results": len(commits),
                 "page": 1
             }
         else:
