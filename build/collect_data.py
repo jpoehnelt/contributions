@@ -82,11 +82,12 @@ for i, proj_number in enumerate(GITHUB_REPOS):
     print("Tracking "+str(len(proj_number))+ " Project#"+str(i)+" files")
     i += 1
 
-for project in GITHUB_REPOS:
-    print("Fetching commits for project: "+(''.join(project)))
-    r = requests.get('https://api.github.com/repos/'+(''.join(project))+'/commits', auth=('cs399contributions', 'contributions399'))
-    json_contrib = json.loads(r.text)
-    print(json_contrib)
+for proj_number in GITHUB_REPOS:
+    for project in proj_number:
+        print("Fetching commits for project: "+(''.join(project)))
+        r = requests.get('https://api.github.com/repos/'+(''.join(project))+'/commits', auth=('cs399contributions', 'contributions399'))
+        json_contrib = json.loads(r.text)
+        print(json_contrib)
 
     #print(json_contrib)
 
