@@ -27,7 +27,7 @@ class CommitApi(ApiRequest):
             if 'contributor_id' in self.request.GET:
                 # /api/commit?contributor_id=123
                 qry.filter()
-            
+
 
             commits = qry.fetch()
             data = {
