@@ -15,10 +15,9 @@ class File(ndb.Model):
 
 
 class Commit(CustomModel):
-    project = ndb.KeyProperty(Project)
-    contributor = ndb.KeyProperty(Contributor)
+    project = ndb.KeyProperty(Project, required=True)
+    contributor = ndb.KeyProperty(Contributor, required=True)
 
-    name = ndb.StringProperty()
     date = ndb.DateTimeProperty()
     message = ndb.StringProperty()
 

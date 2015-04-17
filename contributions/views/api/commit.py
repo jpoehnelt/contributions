@@ -3,7 +3,7 @@ from contributions.models.commit import Commit
 from contributions.models.project import Project
 from contributions.models.contributor import Contributor
 from contributions.utils.decorators import required_json_attributes
-from contributions.exceptions import NotFoundException
+from contributions.exceptions import NotFoundException, ReferentialIntegrityError
 from google.appengine.ext import ndb
 import datetime
 
@@ -18,18 +18,25 @@ class CommitApi(ApiRequest):
         # TODO Implement filtering. /api/commits?project=1231231
 
         if id is None:
-            # get all of the commits to start with
-            qry = Commit.query()
+            if 'project_id' in self.request.GET and 'contributor_id' in self.request.GET:
+                # get all commits for a specific project and contributor
+                # e.g. /api/commit?project_id=123&contributor_id=123
+                project_id = int(self.request.get('project_id'))
+                contributor_id = int(self.request.get('contributor_id'))
+                qry = Commit.query(Commit.project == ndb.Key(Project, project_id),
+                                   Commit.contributor == ndb.Key(Contributor, contributor_id))
 
-            if 'project_id' in self.request.GET:
+            elif 'project_id' in self.request.GET:
                 # get all commits for a specific project e.g. /api/commit?project_id=123
-                project_id = self.request.get('project_id')
-                qry = qry.filter(Commit.get_by_id(project_id))
+                project_id = int(self.request.get('project_id'))
+                qry = Commit.query(Commit.project == ndb.Key(Project, project_id))
 
-            if 'contributor_id' in self.request.GET:
+            elif 'contributor_id' in self.request.GET:
                 # get all commits by this contributor e.g. /api/commit?contributor_id=123
-                contrib_id = self.request.get('contributor_id')
-                qry = qry.filter(Commit.get_by_id(contrib_id))
+                contributor_id = int(self.request.get('contributor_id'))
+                qry = Commit.query(Commit.contributor == ndb.Key(Contributor, contributor_id))
+            else:
+                qry = Commit.query()
 
             commits = qry.fetch()
             data = {
@@ -41,7 +48,7 @@ class CommitApi(ApiRequest):
         else:
             data = Commit.get_by_id(id)
             if data is None:
-                raise NotFoundException
+                raise NotFoundException()
 
         self.jsonify(data)
 
@@ -58,13 +65,16 @@ class CommitApi(ApiRequest):
         data['date'] = datetime.datetime.strptime(data['date'][0:-1], "%Y-%m-%dT%H:%M:%S")
 
         # Get key from id
-        data['contributor'] = ndb.Key(Contributor, data['contributor'])
-        data['project'] = ndb.Key(Project, data['project'])
 
-        # TODO handle exceptions from google ndb insert method
+        data['contributor'] = ndb.Key(Contributor, data['contributor'])
+        if data['contributor'].get() is None:
+            raise ReferentialIntegrityError()
+
+        data['project'] = ndb.Key(Project, data['project'])
+        if data['project'].get() is None:
+            raise ReferentialIntegrityError()
 
         commit = Commit.insert(**data)
-
         self.jsonify(commit, 201)
 
     @required_json_attributes('id')

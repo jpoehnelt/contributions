@@ -23,3 +23,8 @@ class MissingAttribute(JSONHTTPException):
     def __init__(self):
         self.error = "Missing Attribute"
         self.code = 400
+
+class ReferentialIntegrityError(JSONHTTPException):
+    def __init__(self):
+        self.error = "Referential Integrity Error"
+        self.code = 400

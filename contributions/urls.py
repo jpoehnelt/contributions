@@ -19,7 +19,7 @@ routes = [
     ('/api/project', ProjectApi),
     ('/api/project/(\d+)', ProjectApi),
     ('/api/commit', CommitApi),
-    ('/api/commit/(\s+)', CommitApi),
+    ('/api/commit/(.*)', CommitApi),
     ('/api/contributor', ContributorApi),
     ('/api/contributor/(\d+)', ContributorApi),
 ]
