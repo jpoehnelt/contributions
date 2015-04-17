@@ -9,7 +9,7 @@ class JSONEncoder(json.JSONEncoder):
     """
     def default(self, o):
         if isinstance(o, ndb.Key):
-            o = ndb.Key.get(o)
+            return o.get()
         if isinstance(o, ndb.Model):
             return dict(ndb.Model.to_dict(o), **dict(id=o.key.id()))
         elif isinstance(o, (datetime, date, time)):
