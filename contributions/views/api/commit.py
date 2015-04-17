@@ -18,16 +18,18 @@ class CommitApi(ApiRequest):
         # TODO Implement filtering. /api/commits?project=1231231
 
         if id is None:
+            # get all of the commits to start with
             qry = Commit.query()
 
             if 'project_id' in self.request.GET:
-                # /api/commit?project_id=123
-                qry.filter()
+                # get all commits for a specific project e.g. /api/commit?project_id=123
+                project_id = self.request.get('project_id')
+                qry = qry.filter(Commit.get_by_id(project_id))
 
             if 'contributor_id' in self.request.GET:
-                # /api/commit?contributor_id=123
-                qry.filter()
-
+                # get all commits by this contributor e.g. /api/commit?contributor_id=123
+                contrib_id = self.request.get('contributor_id')
+                qry = qry.filter(Commit.get_by_id(contrib_id))
 
             commits = qry.fetch()
             data = {
@@ -35,8 +37,9 @@ class CommitApi(ApiRequest):
                 "num_results": len(commits),
                 "page": 1
             }
+
         else:
-            data = Project.get_by_id(id)
+            data = Commit.get_by_id(id)
             if data is None:
                 raise NotFoundException
 

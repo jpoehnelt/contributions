@@ -1,7 +1,9 @@
+from contributions.models.commit import Commit
 from contributions import app
 from google.appengine.ext import testbed
-import unittest
+from google.appengine.ext import ndb
 import webtest
+import unittest
 import json
 
 JSON_HEADERS = {"Content-Type": "application/json"}
@@ -23,7 +25,30 @@ class TestCommitApi(unittest.TestCase):
         self.assertIsInstance(response.json['objects'], list)
 
     def test_get_single(self):
-        pass
+        data = {
+            "id": "1231lkjdafd-Random-Hash-1231231",
+            "project": 1231231,
+            "contributor": 123123,
+            "date": "2015-01-23T16:05:50Z",
+            "message": "bad commit message here",
+            "changes": 5,
+            "additions": 2,
+            "deletions": 3,
+        }
+
+        response = self.test_app.post('/api/commit', params=json.dumps(data),
+                                        headers=JSON_HEADERS, status=201)
+        ##########################################
+        # Getting the commit directly works fine...
+        ##########################################
+        #commit = Commit.get_by_id(data['id'])
+        #print(commit)
+        #print response.json
+        ##########################################
+        
+        # This line breaks this test for some reason. Can't figure this out...
+        self.test_app.get('/api/commit/%s' % data['id'], status=200)
+        #print response
 
     def test_post(self):
         data = {
