@@ -4,25 +4,27 @@ from contributions.models.commit import Commit
 import logging
 
 class ProjectsPage(Request):
-    def get(self, project_id=None):
-        if id is not None:
-        	# # testing putting a project in the db
-        	# project = Project(id=29870404,
-        	# 				  name='cs399_the_theatre',
-        	# 				  owner='mkgilbert',
-        	# 				  project_number=3)
-        	# proj_key = project.put() # now in the database
-        	# # now let's get the object we made
-        	# project = proj_key.get()
-        	logging.debug("The project id requested was " + str(project_id))
-        	project = Project.get_by_id(project_id)
-        	if project is None:
-        		raise Exception("None Type Project was returned --> id was " + str(project_id))
-        	else:
-        		count = Commit.query().filter(project=project.key).count()
 
-        	self.render('projects_single.html', {"project_id": project_id, "count": count})
+    def get(self, project_id=None):	
+    	# put 0 in the url for this view to get this part to propogate all the commit_counts
+       	if project_id is not None:
+       		# this will query all commits for each project and put commit counts in db
+        	if int(project_id) == 0:
+        		qry = Project.query()
+	    		projects = qry.fetch()
+	    		for project in projects:
+	    			count = Commit.query().filter(Commit.project == project.key).count()
+	    			project.commit_count = count
+	    			project.put()
+
+	    	else:  # specific project is selected
+        		project = Project.get_by_id(int(project_id))
+
+	        	if project is None:
+	        		raise Exception("None Type Project was returned --> id was " + str(project_id))
+
+	        self.render('projects_single.html', {"project": project, "count": count})
         else:
         	qry = Project.query()
-        	projects = qry.fetch()
+        	projects = qry.fetch(30)
         	self.render('projects_all.html', {"projects": projects})
