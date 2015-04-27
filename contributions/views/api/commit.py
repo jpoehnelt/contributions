@@ -44,7 +44,7 @@ class CommitApi(ApiRequest):
             }
 
         else:
-            data = Commit.get_by_id(int(id))
+            data = Commit.get_by_id(id)
             if data is None:
                 raise NotFoundException()
 

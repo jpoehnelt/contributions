@@ -51,7 +51,7 @@ class TestCommitApi(unittest.TestCase):
         project = self.create_project()
 
         data = {
-            "id": 1231231,
+            "id": 'a1231231a',
             "project": project.key.id(),
             "contributor": contributor.key.id(),
             "date": "2015-01-23T16:05:50Z",
@@ -95,7 +95,7 @@ class TestCommitApi(unittest.TestCase):
         project = self.create_project()
 
         data = {
-            "id": 9098908,
+            "id": 'adsf9098908',
             "project": project.key.id(),
             "contributor": contributor.key.id(),
             "date": "2015-01-23T16:05:50Z",
@@ -110,9 +110,9 @@ class TestCommitApi(unittest.TestCase):
         print response.json
         # This line breaks this test for some reason. Can't figure this out...
         r = self.test_app.get('/api/commit', status=200)
-        print '/api/commit/%d' % data['id']
+        print '/api/commit/%s' % data['id']
         # print'/api/commit/%s' % data['id']
-        response = self.test_app.get('/api/commit/%d' % data['id'], status=200)
+        response = self.test_app.get('/api/commit/%s' % data['id'], status=200)
         self.assertEqual(json.loads(response.body)['id'], data['id'])
 
     def test_post(self):
@@ -120,7 +120,7 @@ class TestCommitApi(unittest.TestCase):
         project = self.create_project()
 
         data = {
-            "id": 1231231,
+            "id": 'asdf1231231',
             "project": project.key.id(),
             "contributor": contributor.key.id(),
             "date": "2015-01-23T16:05:50Z",
@@ -170,7 +170,7 @@ class TestCommitApi(unittest.TestCase):
         project = self.create_project()
 
         data = {
-            "id": 91692724,
+            "id": 'asdf91692724',
             "project": project.key.id(),
             "contributor": contributor.key.id(),
             "date": "2015-01-23T16:05:50Z",
@@ -199,7 +199,7 @@ class TestCommitApi(unittest.TestCase):
         response = self.test_app.post('/api/commit', params=json.dumps(data),
                                       headers=JSON_HEADERS, status=201)
         data_update = {
-            "id": 91692724,
+            "id": 'asdf91692724',
             "project": project.key.id(),
             "contributor": contributor.key.id(),
             "date": "2015-01-23T16:05:50Z",

@@ -5,13 +5,15 @@ from google.appengine.ext import ndb
 
 
 class File(ndb.Model):
-    file_name = ndb.StringProperty(required=True)
+    filename = ndb.StringProperty(required=True)
     status = ndb.StringProperty()
     additions = ndb.IntegerProperty()
     deletions = ndb.IntegerProperty()
     changes = ndb.IntegerProperty()
-    patch = ndb.BlobProperty()
     blob_url = ndb.StringProperty()
+    contents_url = ndb.StringProperty()
+    raw_url = ndb.StringProperty()
+    sha = ndb.StringProperty()
 
 
 class Commit(CustomModel):
