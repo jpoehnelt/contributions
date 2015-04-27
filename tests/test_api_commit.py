@@ -8,8 +8,6 @@ import json
 JSON_HEADERS = {"Content-Type": "application/json"}
 
 
-
-
 class TestCommitApi(unittest.TestCase):
     def setUp(self):
         self.test_app = webtest.TestApp(app)
@@ -37,7 +35,7 @@ class TestCommitApi(unittest.TestCase):
 
     def create_project(self):
         data = {
-            "id": 123123123,
+            "id": 4321,
             "owner": "user",
             "name": "some-repo1",
             "project_number": 1,
@@ -53,7 +51,7 @@ class TestCommitApi(unittest.TestCase):
         project = self.create_project()
 
         data = {
-            "id": "1231lkjdafd-Random-Hash-1231231",
+            "id": 1231231,
             "project": project.key.id(),
             "contributor": contributor.key.id(),
             "date": "2015-01-23T16:05:50Z",
@@ -64,7 +62,7 @@ class TestCommitApi(unittest.TestCase):
         }
 
         response = self.test_app.post('/api/commit', params=json.dumps(data),
-                                        headers=JSON_HEADERS, status=201)
+                                      headers=JSON_HEADERS, status=201)
 
         response = self.test_app.get('/api/commit')
         self.assertIsInstance(response.json['objects'], list)
@@ -83,7 +81,8 @@ class TestCommitApi(unittest.TestCase):
         response = self.test_app.get('/api/commit?project_id=%d' % data['project'], status=200)
         self.assertEqual(len(json.loads(response.body)['objects']), 1)
 
-        response = self.test_app.get('/api/commit?contributor=%d' % data['contributor'], status=200)
+        response = self.test_app.get('/api/commit?contributor=%d' % data['contributor'],
+                                     status=200)
         self.assertEqual(len(json.loads(response.body)['objects']), 1)
 
         response = self.test_app.get(
@@ -96,31 +95,7 @@ class TestCommitApi(unittest.TestCase):
         project = self.create_project()
 
         data = {
-            "id": "1231lkjdafd-Random-Hash-1231231",
-            "project": project.key.id(),
-            "contributor": contributor.key.id(),
-            "date": "2015-01-23T16:05:50Z",
-            "message": "bad commit message here",
-            "changes": 5,
-            "additions": 2,
-            "deletions": 3,
-        }
-
-        response = self.test_app.post('/api/commit', params=json.dumps(data),
-                                        headers=JSON_HEADERS, status=201)
-        
-        # This line breaks this test for some reason. Can't figure this out...
-        self.test_app.get('/api/commit', status=200)
-        # print'/api/commit/%s' % data['id']
-        response = self.test_app.get('/api/commit/%s' % data['id'], status=200)
-        self.assertEqual(json.loads(response.body)['id'], data['id'])
-
-    def test_post(self):
-        contributor = self.create_contributor()
-        project = self.create_project()
-
-        data = {
-            "id": "1231lkjdafd-Random-Hash-1231231",
+            "id": 9098908,
             "project": project.key.id(),
             "contributor": contributor.key.id(),
             "date": "2015-01-23T16:05:50Z",
@@ -132,6 +107,50 @@ class TestCommitApi(unittest.TestCase):
 
         response = self.test_app.post('/api/commit', params=json.dumps(data),
                                       headers=JSON_HEADERS, status=201)
+        print response.json
+        # This line breaks this test for some reason. Can't figure this out...
+        r = self.test_app.get('/api/commit', status=200)
+        print '/api/commit/%d' % data['id']
+        # print'/api/commit/%s' % data['id']
+        response = self.test_app.get('/api/commit/%d' % data['id'], status=200)
+        self.assertEqual(json.loads(response.body)['id'], data['id'])
+
+    def test_post(self):
+        contributor = self.create_contributor()
+        project = self.create_project()
+
+        data = {
+            "id": 1231231,
+            "project": project.key.id(),
+            "contributor": contributor.key.id(),
+            "date": "2015-01-23T16:05:50Z",
+            "message": "bad commit message here",
+            "changes": 5,
+            "additions": 2,
+            "deletions": 3,
+            "files": [
+                {
+                    "file_name": 'asdf.html',
+                    "status": 'asdf',
+                    "changes": 5,
+                    "additions": 2,
+                    "deletions": 3,
+                },
+                {
+                    "file_name": 'asdf123.py',
+                    "status": 'asdf',
+                    "changes": 5,
+                    "additions": 2,
+                    "deletions": 3,
+                }
+            ]
+        }
+
+        response = self.test_app.post('/api/commit', params=json.dumps(data),
+                                      headers=JSON_HEADERS, status=201)
+
+        print response.json
+
 
         # Test Duplicate Response
         response = self.test_app.post('/api/commit', params=json.dumps(data),
@@ -144,3 +163,62 @@ class TestCommitApi(unittest.TestCase):
         }
         response = self.test_app.post('/api/commit', params=json.dumps(bad_data),
                                       headers=JSON_HEADERS, status=400)
+
+
+    def test_update(self):
+        contributor = self.create_contributor()
+        project = self.create_project()
+
+        data = {
+            "id": 91692724,
+            "project": project.key.id(),
+            "contributor": contributor.key.id(),
+            "date": "2015-01-23T16:05:50Z",
+            "message": "bad commit message here",
+            "changes": 5,
+            "additions": 2,
+            "deletions": 3,
+            "files": [
+                {
+                    "file_name": 'asdf.html',
+                    "status": 'asdf',
+                    "changes": 5,
+                    "additions": 2,
+                    "deletions": 3,
+                },
+                {
+                    "file_name": 'asdf123.py',
+                    "status": 'asdf',
+                    "changes": 5,
+                    "additions": 2,
+                    "deletions": 3,
+                }
+            ]
+        }
+
+        response = self.test_app.post('/api/commit', params=json.dumps(data),
+                                      headers=JSON_HEADERS, status=201)
+        data_update = {
+            "id": 91692724,
+            "project": project.key.id(),
+            "contributor": contributor.key.id(),
+            "date": "2015-01-23T16:05:50Z",
+            "message": "bad commit message here",
+            "changes": 123,
+            "additions": 22,
+            "deletions": 32,
+            "files": [
+                {
+                    "file_name": 'asdf.html',
+                    "status": 'asdf',
+                    "changes": 5,
+                    "additions": 2,
+                    "deletions": 3,
+                }
+            ]
+        }
+
+        response = self.test_app.put('/api/commit', params=json.dumps(data_update),
+                                      headers=JSON_HEADERS, status=200)
+
+        self.assertEqual(len(response.json['files']), 1)

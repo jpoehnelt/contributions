@@ -2,10 +2,12 @@ from contributions.views.api import ApiRequest
 from contributions.models.project import Project
 from contributions.utils.decorators import required_json_attributes
 from contributions.exceptions import NotFoundException
-
+import logging
 
 class ProjectApi(ApiRequest):
     def get(self, id=None):
+        logging.info('Handling Get')
+
         """
         This method gets one or all projects and returns the projects as json.
         :param id:
@@ -35,6 +37,8 @@ class ProjectApi(ApiRequest):
         :param id:
         :return:
         """
+        logging.info('Handling Post')
+        logging.info(id)
         data = self.request.json
         project = Project.insert(**data)
         self.jsonify(project, 201)

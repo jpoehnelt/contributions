@@ -1,5 +1,5 @@
 from google.appengine.ext import ndb
-from contributions.exceptions import DuplicateEntity
+from contributions.exceptions import DuplicateEntity, NotFoundException
 
 
 class CustomModel(ndb.Model):
@@ -55,5 +55,19 @@ class CustomModel(ndb.Model):
         :param kwargs:
         :return: entity
         """
-        pass
-        #todo
+        id = kwargs['id']
+
+        key = ndb.Key(cls, id)
+
+        # Get Entity with Key
+        entity = key.get()
+
+        # Create Entity
+
+        entity = cls(**kwargs)
+        entity.key = key
+
+        # Save to Datastore
+        entity.put()
+
+        return entity
