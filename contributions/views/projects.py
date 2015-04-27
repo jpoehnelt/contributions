@@ -23,7 +23,7 @@ class ProjectsPage(Request):
 	        	if project is None:
 	        		raise Exception("None Type Project was returned --> id was " + str(project_id))
 
-	        self.render('projects_single.html', {"project": project, "count": count})
+	        self.render('projects_single.html', {"project": project})
         else:
         	qry = Project.query()
         	projects = qry.fetch(30)
