@@ -16,7 +16,7 @@ class ApiRequest(Request):
         if isinstance(exception, JSONHTTPException):
             self.jsonify(exception.to_dict(), exception.code)
         else:
-            self.response.set_status(500)
+            self.jsonify(exception.__dict__, 500)
 
     def jsonify(self, data, code=200):
         """
