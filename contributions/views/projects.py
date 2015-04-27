@@ -26,5 +26,5 @@ class ProjectsPage(Request):
 	        self.render('projects_single.html', {"project": project})
         else:
         	qry = Project.query()
-        	projects = qry.fetch(30)
+        	projects = qry.fetch()
         	self.render('projects_all.html', {"projects": projects})

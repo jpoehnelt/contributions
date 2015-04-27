@@ -13,8 +13,8 @@
             	<th>Commit Count</th>
             	{% for project in projects %}
             		<tr>
-            			<td>{{ project.name }}</td>
             			<td>{{ project.project_number }}</td>
+            			<td><a href="projects/{{project.key.id()}}">{{ project.name }}</a></td>
             			<td>{{ project.commit_count }}</td>
             		</tr>
             	{% endfor %}
