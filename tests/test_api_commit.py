@@ -130,14 +130,14 @@ class TestCommitApi(unittest.TestCase):
             "deletions": 3,
             "files": [
                 {
-                    "file_name": 'asdf.html',
+                    "filename": 'asdf.html',
                     "status": 'asdf',
                     "changes": 5,
                     "additions": 2,
                     "deletions": 3,
                 },
                 {
-                    "file_name": 'asdf123.py',
+                    "filename": 'asdf123.py',
                     "status": 'asdf',
                     "changes": 5,
                     "additions": 2,
@@ -180,14 +180,14 @@ class TestCommitApi(unittest.TestCase):
             "deletions": 3,
             "files": [
                 {
-                    "file_name": 'asdf.html',
+                    "filename": 'asdf.html',
                     "status": 'asdf',
                     "changes": 5,
                     "additions": 2,
                     "deletions": 3,
                 },
                 {
-                    "file_name": 'asdf123.py',
+                    "filename": 'asdf123.py',
                     "status": 'asdf',
                     "changes": 5,
                     "additions": 2,
@@ -209,7 +209,7 @@ class TestCommitApi(unittest.TestCase):
             "deletions": 32,
             "files": [
                 {
-                    "file_name": 'asdf.html',
+                    "filename": 'asdf.html',
                     "status": 'asdf',
                     "changes": 5,
                     "additions": 2,
