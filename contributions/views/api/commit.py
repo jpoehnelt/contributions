@@ -6,6 +6,7 @@ from contributions.utils.decorators import required_json_attributes
 from contributions.exceptions import NotFoundException, ReferentialIntegrityError
 from google.appengine.ext import ndb
 import datetime
+import logging
 
 class CommitApi(ApiRequest):
     def get(self, id=None):
@@ -68,10 +69,12 @@ class CommitApi(ApiRequest):
 
         data['contributor'] = ndb.Key(Contributor, data['contributor'])
         if data['contributor'].get() is None:
+            logging.info("!!!!!!!!===== There was no contributor info ======!!!!!!!!")
             raise ReferentialIntegrityError()
 
         data['project'] = ndb.Key(Project, data['project'])
         if data['project'].get() is None:
+            logging.info("!!!!!!!!===== There was no project info ======!!!!!!!!")
             raise ReferentialIntegrityError()
 
         commit = Commit.insert(**data)
