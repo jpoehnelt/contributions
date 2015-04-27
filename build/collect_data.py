@@ -1,3 +1,5 @@
+import gevent
+from gevent.pool import Pool
 import requests
 import json
 import time
@@ -46,14 +48,13 @@ GITHUB_REPOS = [
 ]
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
-# #### TESTING - just grap one project ######
-# GITHUB_REPOS = [['sk367/cs399_Theater']]
-
 collected_contributors = {}  # stores all the non-github-user's 'collected_contributors' so we don't add more than one
+
+pool = Pool(4)
 
 
 def get_repo(repo_name, project_number):
-    print "Getting Repo: %s" % repo_name
+    print "**********************\nGetting Repo: %s" % repo_name
 
     # get repo info
     response = requests.get('https://api.github.com/repos/' + repo_name,
@@ -117,14 +118,19 @@ def get_repo_commits(project, repo_name):
         print "==========================="
         print 'Getting commits: %s' % url
         r = requests.get(url, auth=AUTH)
+
+        print "Current rate limit remaining %s." %r.headers['x-ratelimit-remaining']
+
         #convert JSON string into Python nested dictionary/list
         json_commits = json.loads(r.text)
 
-        for commit in json_commits:
-            # send data to be processed and saved to datastore
-            print "---------------------------"
-            parse_single_commit(commit['url'], project['id'])
-            time.sleep(0.1) # keep from hitting rate limit on github
+        # for commit in json_commits:
+        #     # send data to be processed and saved to datastore
+        #     print "---------------------------"
+        #     parse_single_commit(commit['url'], project['id'])
+        #     time.sleep(0.1) # keep from hitting rate limit on github
+
+        pool.map(parse_single_commit, [[commit['url'], project['id']] for commit in json_commits])
 
         # api only gets 30 commits at a time, so need to get the next page link
         if 'next' in r.links:
@@ -154,10 +160,13 @@ def save_contributor(data):
         raise Exception("The response was %d " % response.status_code)
 
 
-def parse_single_commit(url, project_id):
+def parse_single_commit(args):
     """
     :param data: repo_name, username, github api url that holds the commit data
     """
+
+    url = args[0]
+    project_id = args[1]
     sha = url.split('/')[-1]
     if requests.get(COMMIT_API_URL + '/%s' % sha).status_code == 200:
         print "Already have commit: %s" % sha
