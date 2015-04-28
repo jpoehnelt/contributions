@@ -7,6 +7,22 @@
             <h1>Hello {{ user }}!</h1>
             {% else %}
             <h1>Contributor!</h1>
+            <h3>{{ contrib.username }}</h3>
+            <h4>Commits</h4>
+            <table class="table table-striped">
+            	<th>Project Number</th>
+            	<th>Date</th>
+            	<th>Number of Changes</th>
+            	<th>Files Changed</th>
+            	{% for commit in commits %}
+            		<tr>
+            			<td>{{ commit.project }}</td>
+            			<td>{{ commit.date }}</td>
+            			<td>{{ commit.changes }}</td>
+            			<td>{{ commit.files.length }}</td>
+            		</tr>
+            	{% endfor %}
+            </table>
             {% endif %}
         </div>
     </div>

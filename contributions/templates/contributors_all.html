@@ -7,6 +7,17 @@
             <h1>Hello {{ user }}!</h1>
             {% else %}
             <h1>All Contributors!</h1>
+            <table class="table table-striped">
+            	<th>GitHub Username</th>
+            	<th>GitHub Avatar</th>
+            	<tr>
+            		{% for contrib in contribs %}
+            		<tr>
+            			<td>{{ contrib.username }}</td>
+            			<td><img src="{{ contrib.avatar_url }}"></td>
+            		</tr>
+            		{% endfor %}
+            </table>
             {% endif %}
         </div>
     </div>
