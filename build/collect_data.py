@@ -50,15 +50,31 @@ DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
 collected_contributors = {}  # stores all the non-github-user's 'collected_contributors' so we don't add more than one
 
-pool = Pool(4)
+pool = Pool(10)
+
+RETRIES = 5
 
 
 def get_repo(repo_name, project_number):
-    print "**********************\nGetting Repo: %s" % repo_name
 
     # get repo info
-    response = requests.get('https://api.github.com/repos/' + repo_name,
-                            auth=AUTH)
+    tries = 1
+    while tries < RETRIES:
+        print "**********************\nGetting Repo: %s Try #: %d" % (repo_name, tries)
+        try:
+            url = 'https://api.github.com/repos/' + repo_name
+            print url
+            response = requests.get('https://api.github.com/repos/' + repo_name, auth=AUTH)
+        except Exception as e:
+            print e
+            time.sleep(tries**2)
+            tries += 1
+        else:
+            break
+
+    if response is None:
+        return
+
     repo_json_data = json.loads(response.text)
 
     # Create project in database
