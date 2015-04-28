@@ -16,7 +16,7 @@
             	<th>Files Changed</th>
             	{% for commit in commits %}
             		<tr>
-            			<td>{{ commit.project }}</td>
+            			<td>{{ commit.project.get().name }}</td>
             			<td>{{ commit.date }}</td>
             			<td>{{ commit.changes }}</td>
             			<td>{{ commit.files.length }}</td>
