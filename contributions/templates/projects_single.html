@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block content%}
+{% block content %}
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
@@ -23,5 +23,23 @@
             {% endif %}
         </div>
     </div>
+    <div class="row">
+        <div class="col-xs-12">
+
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="application/javascript">
+    var project_id = {{ project.key.id() }};
+    getCommits(project_id).then(function (data) {
+        cf.data.add(data.objects);
+
+
+        // this gets all contributors with number of commits
+        console.log(cf.groups.username.top(Infinity));
+    });
+</script>
 {% endblock %}
