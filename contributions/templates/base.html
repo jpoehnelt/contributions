@@ -52,23 +52,22 @@
         <!--/.nav-collapse -->
     </div>
 </nav>
+
 <div class="loading">Loading&#8230;</div>
 
-<div class="content" style="display: none;">
 {% block content %}
 {% endblock %}
-</div>
 
 {% block scripts %}
 {% endblock %}
 
 <!-- Page loading animation -->
 <script>
-    $(window).load(function(){
-        $(".loading").fadeOut("fast", function(){
-            $(".content").fadeIn("fast");
-        });
-    });
+
+    function hideLoadingSpinner(){
+        $(".loading").fadeOut("fast");
+    }
+
 </script>
 
 </body>
