@@ -49,13 +49,19 @@ GITHUB_REPOS = [
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
 collected_contributors = {}  # stores all the non-github-user's 'collected_contributors' so we don't add more than one
-
+commits = []
 pool = Pool(30)
 
 RETRIES = 5
 
+def get_current_commits():
+    print 'Getting current commits... this may take awhile'
+    for commit in json.loads(get_url(COMMIT_API_URL, timeout=60).text)['objects']:
+        commits.append(commit['id'])
 
-def get_url(url, auth=None):
+    print commits
+
+def get_url(url, auth=None, timeout=4):
     """
     Requests does not make more than a single get attempt.
     :param url: url to get
@@ -66,7 +72,7 @@ def get_url(url, auth=None):
     while tries < RETRIES:
         try:
             print "Getting: %s Try: %d" % (url, tries)
-            return requests.get(url, auth=AUTH)
+            return requests.get(url, auth=AUTH, timeout=timeout)
         except requests.ConnectionError as e:
             print e
             tries += 1
@@ -190,7 +196,7 @@ def parse_single_commit(args):
     url = args[0]
     project_id = args[1]
     sha = url.split('/')[-1]
-    if requests.get(COMMIT_API_URL + '/%s' % sha).status_code == 200:
+    if sha in commits:
         print "Already have commit: %s" % sha
         return
 
@@ -297,6 +303,7 @@ def save_commit(data):
 
 
 if __name__ == "__main__":
+    get_current_commits()
     for i, project_list in enumerate(GITHUB_REPOS):
         # projects are not zero based
         project_number = i + 1
