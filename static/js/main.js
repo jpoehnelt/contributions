@@ -3,7 +3,6 @@ Date.prototype.addHours= function(h){
     return this;
 };
 
-
 var ANON = true;
 var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -46,9 +45,15 @@ function getCommits(project_id, contributor_id) {
         projectNumber: cf.data.dimension(function (commit) {
             return commit.project.projectNumber;
         }),
+        day: cf.data.dimension(function (commit) {
+            var d = new Date(commit.date);
+            d = d.addHours(7);
+            d.setHours(0,0,0,0);
+            return d;
+        }),
         dayOfWeek: cf.data.dimension(function (commit) {
-            var date = new Date(commit.date);
-            return date.addHours(7).getDay();
+            var d = new Date(commit.date);
+            return d.addHours(7).getDay();
         })
     };
 
@@ -60,9 +65,8 @@ function getCommits(project_id, contributor_id) {
         projectNumber: cf.dimensions.projectNumber.group(function (projectNumber) {
             return projectNumber;
         }),
-        dayOfWeek: cf.dimensions.dayOfWeek.group(function (dayOfWeek) {
-            return dayOfWeek;
-        })
+        day: cf.dimensions.day.group(),
+        dayOfWeek: cf.dimensions.dayOfWeek.group()
     };
 
     cf.charts = {
@@ -79,8 +83,29 @@ function getCommits(project_id, contributor_id) {
                 })
                 .elasticX(true);
             return self;
+        },
+        overTime: function (id) {
+            var self = dc.lineChart(id);
+            self.width($(id).parent().width())
+                .height(225)
+                .renderArea(true)
+                .margins({top: 10, right: 10, bottom: 30, left: 30})
+                .dimension(cf.dimensions.day)
+                .group(cf.groups.day)
+                .elasticY(true)
+                .x(d3.time.scale().domain(d3.extent(cf.groups.day.top(Infinity), function (d) {
+                    return d.key;
+                })))
+                .renderHorizontalGridLines(true);
+            return self;
         }
     };
 
 }());
 
+function hideLoadingSpinner() {
+    $(".loading").fadeOut("fast");
+}
+function showLoadingSpinner() {
+    $(".loading").fadeIn("fast");
+}

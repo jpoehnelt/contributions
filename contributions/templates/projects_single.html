@@ -31,6 +31,13 @@
                 <div id="day-of-week-chart"></div>
             </div>
         </div>
+        <div class="col-md-9">
+            <div class="well well-sm clearfix">
+                <h4 class="chart-title">Commits Over Time</h4>
+
+                <div id="day-chart"></div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -38,11 +45,18 @@
 {% block scripts %}
 <script type="application/javascript">
     var projectId = {{ project.key.id() }};
-    getCommits(projectId).then(function (data) {
-        cf.data.add(data.objects);
+    showLoadingSpinner();
 
+    getCommits(projectId).then(function (data) {
+
+        cf.data.add(data.objects);
+        hideLoadingSpinner();
         var dayOfWeekChart = cf.charts.dayOfWeek('#day-of-week-chart');
         dayOfWeekChart.render();
+        $(".loading").fadeOut("fast");
+        console.log(cf.groups.day.top(Infinity));
+        var dayChart = cf.charts.overTime('#day-chart');
+        dayChart.render();
     });
 </script>
 {% endblock %}
