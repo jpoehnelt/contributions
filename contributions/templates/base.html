@@ -10,6 +10,10 @@
     <!-- Optional theme -->
     <link rel="stylesheet"
           href="/static/css/custom.css">
+    
+    <!-- Loading Animation Styles -->
+    <link rel="stylesheet"
+          href="/static/css/loading.css">
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
@@ -45,10 +49,24 @@
         <!--/.nav-collapse -->
     </div>
 </nav>
+<div class="loading">Loading&#8230;</div>
+
+<div class="content" style="display: none;">
 {% block content %}
 {% endblock %}
+</div>
 
 {% block scripts %}
 {% endblock %}
+
+<!-- Page loading animation -->
+<script>
+    $(window).load(function(){
+        $(".loading").fadeOut("fast", function(){
+            $(".content").fadeIn("fast");
+        });
+    });
+</script>
+
 </body>
 </html>
