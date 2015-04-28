@@ -9,14 +9,14 @@
             <h1>Contributor!</h1>
             <h3>{{ contrib.username }}</h3>
             <h4>Commits</h4>
-            <table class="table table-striped">
+            <table id="commits" class="table table-striped">
             	<th>Project Number</th>
             	<th>Date</th>
             	<th>Number of Changes</th>
             	<th>Files Changed</th>
             	{% for commit in commits %}
             		<tr>
-            			<td>{{ commit.project.get().name }}</td>
+            			<td><a href="/projects/{{ commit.project.id() }}">{{ commit.project.get().name }}</a></td>
             			<td>{{ commit.date }}</td>
             			<td>{{ commit.changes }}</td>
             			<td>{{ commit.files.length }}</td>
@@ -27,4 +27,16 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script type="application/javascript">
+    var contrib_id = {{ contrib.key.id() }};
+    getCommits(contrib_id).then(function (data) {
+        cf.data.add(data.objects);
+
+
+        // this gets all contributors with number of commits
+        console.log(cf.groups.username.top(Infinity));
+    });
+</script>
 {% endblock %}

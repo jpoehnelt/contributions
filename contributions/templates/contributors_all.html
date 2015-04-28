@@ -13,8 +13,12 @@
             	<tr>
             		{% for contrib in contribs %}
             		<tr>
-            			<td>{{ contrib.username }}</td>
-            			<td><a href="/contributors/{{ contrib.key.id() }}"><img src="{{ contrib.avatar_url }}"></a></td>
+            			<td><a href="/contributors/{{ contrib.key.id() }}">{{ contrib.username }}</a></td>
+            			<td>
+            				<a href="/contributors/{{ contrib.key.id() }}">
+            					<img style="max-width: 80px; max-height: 80px;" src="{{ contrib.avatar_url }}">
+            				</a>
+            			</td>
             		</tr>
             		{% endfor %}
             </table>
