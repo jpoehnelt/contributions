@@ -44,7 +44,9 @@ GITHUB_REPOS = [
      'DylanGrayson/social_proj4', 'dukeayers/cs399_SocialMedia', 'ErinBailey/cs399-social',
      'yourbuddyconner/cs399-social'],
     #final
-    ['breadraptor/cs399_final', 'cap377/cs399final', 'EduardoIniguez/CS399-final']
+    ['breadraptor/cs399_final', 'cap377/cs399final', 'EduardoIniguez/CS399-final',
+     'justinwp/contributions', 'alexlanza/CS399-Final', 'DylanGrayson/knobsock', 'lf237/project5',
+     'c1phr/cs399_final']
 ]
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
