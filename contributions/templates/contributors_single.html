@@ -34,7 +34,7 @@
     getCommits(contrib_id).then(function (data) {
         cf.data.add(data.objects);
 
-
+        hideLoadingSpinner();
         // this gets all contributors with number of commits
         console.log(cf.groups.username.top(Infinity));
     });

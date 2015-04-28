@@ -27,3 +27,10 @@
     </div>
 </div>
 {% endblock %}
+{% block scripts %}
+<script type="application/javascript">
+	$(window).load(function(){
+		hideLoadingSpinner();
+	})
+</script>
+{% endblock %}
