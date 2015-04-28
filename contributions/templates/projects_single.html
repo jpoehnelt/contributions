@@ -33,13 +33,16 @@
 
 {% block scripts %}
 <script type="application/javascript">
-    var project_id = {{ project.key.id() }};
+    var projectId = {{ project.key.id() }};
     getCommits(projectId).then(function (data) {
         cf.data.add(data.objects);
 
 
         // this gets all contributors with number of commits
         console.log(cf.groups.username.top(Infinity));
+        console.log(cf.groups.dayOfWeek.top(Infinity));
+
+
     });
 </script>
 {% endblock %}

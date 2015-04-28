@@ -38,6 +38,11 @@ function getCommits(project_id, contributor_id) {
         }),
         projectNumber: cf.data.dimension(function (commit) {
             return commit.project.projectNumber;
+        }),
+        dayOfWeek: cf.data.dimension(function (commit) {
+            var date = new Date(commit.date),
+                weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            return weekday[date.getDay()];
         })
     };
 
@@ -48,6 +53,9 @@ function getCommits(project_id, contributor_id) {
         }),
         projectNumber: cf.dimensions.projectNumber.group(function (projectNumber) {
             return projectNumber;
+        }),
+        dayOfWeek: cf.dimensions.dayOfWeek.group(function (dayOfWeek) {
+            return dayOfWeek;
         })
     };
 
