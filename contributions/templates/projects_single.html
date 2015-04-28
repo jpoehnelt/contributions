@@ -24,8 +24,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-md-3">
+            <div class="well well-sm clearfix">
+                <h4 class="chart-title">Commits by Day of Week</h4>
 
+                <div id="day-of-week-chart"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -37,12 +41,8 @@
     getCommits(projectId).then(function (data) {
         cf.data.add(data.objects);
 
-
-        // this gets all contributors with number of commits
-        console.log(cf.groups.username.top(Infinity));
-        console.log(cf.groups.dayOfWeek.top(Infinity));
-
-
+        var dayOfWeekChart = cf.charts.dayOfWeek('#day-of-week-chart');
+        dayOfWeekChart.render();
     });
 </script>
 {% endblock %}

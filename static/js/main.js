@@ -1,4 +1,11 @@
+Date.prototype.addHours= function(h){
+    this.setHours(this.getHours()+h);
+    return this;
+};
+
+
 var ANON = true;
+var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function getContribRepr(contributor) {
     if (ANON) {
@@ -40,9 +47,8 @@ function getCommits(project_id, contributor_id) {
             return commit.project.projectNumber;
         }),
         dayOfWeek: cf.data.dimension(function (commit) {
-            var date = new Date(commit.date),
-                weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            return weekday[date.getDay()];
+            var date = new Date(commit.date);
+            return date.addHours(7).getDay();
         })
     };
 
@@ -59,6 +65,22 @@ function getCommits(project_id, contributor_id) {
         })
     };
 
+    cf.charts = {
+        dayOfWeek: function (id) {
+            var self = dc.rowChart(id);
+            self.width($(id).parent().width())
+                .height(225)
+                .margins({top: 10, left: 10, right: 10, bottom: 20})
+                .group(cf.groups.dayOfWeek)
+                .dimension(cf.dimensions.dayOfWeek)
+                .colors(d3.scale.category10())
+                .label(function (d) {
+                    return weekdays[d.key];
+                })
+                .elasticX(true);
+            return self;
+        }
+    };
 
 }());
 
