@@ -1,5 +1,5 @@
-Date.prototype.addHours= function(h){
-    this.setHours(this.getHours()+h);
+Date.prototype.addHours = function (h) {
+    this.setHours(this.getHours() + h);
     return this;
 };
 
@@ -28,7 +28,7 @@ function getCommits(project_id, contributor_id) {
     return $.ajax({
         method: "GET",
         url: url
-        });
+    });
 }
 
 (function () {
@@ -39,6 +39,9 @@ function getCommits(project_id, contributor_id) {
 
     // crossfilter dimensions allow indexing of these returned values for quick processing
     cf.dimensions = {
+        sha: cf.data.dimension(function (commit) {
+            return commit.id;
+        }),
         username: cf.data.dimension(function (commit) {
             return getContribRepr(commit.contributor);
         }),
@@ -48,7 +51,7 @@ function getCommits(project_id, contributor_id) {
         day: cf.data.dimension(function (commit) {
             var d = new Date(commit.date);
             d = d.addHours(7);
-            d.setHours(0,0,0,0);
+            d.setHours(0, 0, 0, 0);
             return d;
         }),
         dayOfWeek: cf.data.dimension(function (commit) {
@@ -59,12 +62,9 @@ function getCommits(project_id, contributor_id) {
 
     // groups based upon dimensions
     cf.groups = {
-        username: cf.dimensions.username.group(function (username) {
-            return username;
-        }),
-        projectNumber: cf.dimensions.projectNumber.group(function (projectNumber) {
-            return projectNumber;
-        }),
+        sha: cf.dimensions.sha.group(),
+        username: cf.dimensions.username.group(),
+        projectNumber: cf.dimensions.projectNumber.group(),
         day: cf.dimensions.day.group(),
         dayOfWeek: cf.dimensions.dayOfWeek.group()
     };
@@ -84,6 +84,17 @@ function getCommits(project_id, contributor_id) {
                 .elasticX(true);
             return self;
         },
+        contributor: function (id) {
+            var self = dc.rowChart(id);
+            self.width($(id).parent().width())
+                .height(225)
+                .margins({top: 10, left: 10, right: 10, bottom: 20})
+                .group(cf.groups.username)
+                .dimension(cf.dimensions.username)
+                .colors(d3.scale.category20())
+                .elasticX(true);
+            return self;
+        },
         overTime: function (id) {
             var self = dc.lineChart(id);
             self.width($(id).parent().width())
@@ -97,6 +108,51 @@ function getCommits(project_id, contributor_id) {
                     return d.key;
                 })))
                 .renderHorizontalGridLines(true);
+            return self;
+        },
+        table: function (id, dim) {
+            var self = dc.dataTable(id);
+            self.dimension(dim)
+                .width($(id).parent().width())
+                .group(function () {
+                    return '';
+                })
+                .columns([
+                    function (d) {
+                        return "<a href='/contributors/"
+                            + d.contributor.id
+                            + "'>"
+                            + getContribRepr(d.contributor)
+                            + "</a>";
+                    },
+                    function (d) {
+                        return "<a href='/projects/"
+                            + d.project.id
+                            + "'>"
+                            + d.project.id
+                            + "</a>";
+                    },
+                    function (d) {
+                        var parts = d.date.split(' ')[0].split('-');
+                        return parts[1] + '/' + parts[2];
+                    },
+                    function (d) {
+                        return d.changes;
+                    },
+                    function (d) {
+                        return d.additions;
+                    },
+                    function (d) {
+                        return d.deletions;
+                    },
+                    function (d) {
+                        return d.message;
+                    }])
+                .sortBy(function (d) {
+                    return d.date;
+                })
+                .order(d3.descending);
+
             return self;
         }
     };
