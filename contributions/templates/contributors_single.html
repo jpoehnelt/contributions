@@ -19,7 +19,7 @@
             			<td><a href="/projects/{{ commit.project.id() }}">{{ commit.project.get().name }}</a></td>
             			<td>{{ commit.date }}</td>
             			<td>{{ commit.changes }}</td>
-            			<td>{{ commit.files.length }}</td>
+            			<td>{{ commit.files|length }}</td>
             		</tr>
             	{% endfor %}
             </table>
