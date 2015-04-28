@@ -129,7 +129,7 @@ function getCommits(project_id, contributor_id) {
                         return "<a href='/projects/"
                             + d.project.id
                             + "'>"
-                            + d.project.id
+                            + d.project.owner + "/" + d.project.name
                             + "</a>";
                     },
                     function (d) {
