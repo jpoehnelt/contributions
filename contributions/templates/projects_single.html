@@ -3,24 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            {% if user %}
-            <h1>Hello {{ user }}!</h1>
-            {%else %}
-            <h1>Project!</h1>
-            <p>Username: {{ owner.username }}, Name: {{ owner.name }}</p>
-            <table class="table table-striped">
-            	<th>Project #</th>
-            	<th>Owner</th>
-            	<th>Project Name</th>
-            	<th>Commit Count</th>
-            		<tr>
-            			<td>{{ project.project_number }}</td>
-            			<td><a href="/contributors/{{ owner.key.id() }}">{{ project.owner }}</a></td>
-            			<td>{{ project.name }}</td>
-            			<td>{{ project.commit_count }}</td>
-            		</tr>
-            </table>
-            {% endif %}
+           <h3>{{ project.owner }}/{{ project.name }}</h3>
         </div>
     </div>
     <div class="row">
