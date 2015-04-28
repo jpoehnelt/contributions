@@ -50,31 +50,37 @@ DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
 collected_contributors = {}  # stores all the non-github-user's 'collected_contributors' so we don't add more than one
 
-pool = Pool(10)
+pool = Pool(30)
 
 RETRIES = 5
 
 
-def get_repo(repo_name, project_number):
-
-    # get repo info
+def get_url(url, auth=None):
+    """
+    Requests does not make more than a single get attempt.
+    :param url: url to get
+    :param auth: tuple for basic auth
+    :return: response
+    """
     tries = 1
     while tries < RETRIES:
-        print "**********************\nGetting Repo: %s Try #: %d" % (repo_name, tries)
         try:
-            url = 'https://api.github.com/repos/' + repo_name
-            print url
-            response = requests.get('https://api.github.com/repos/' + repo_name, auth=AUTH)
+            print "Getting: %s Try: %d" % (url, tries)
+            return requests.get(url, auth=AUTH)
+        except requests.ConnectionError as e:
+            print e
+            tries += 1
+            time.sleep(tries**2)
+            continue
         except Exception as e:
             print e
-            time.sleep(tries**2)
-            tries += 1
-        else:
-            break
 
-    if response is None:
-        return
+    raise requests.ConnectionError()
 
+
+
+def get_repo(repo_name, project_number):
+    response = get_url('https://api.github.com/repos/' + repo_name, AUTH)
     repo_json_data = json.loads(response.text)
 
     # Create project in database
@@ -133,7 +139,7 @@ def get_repo_commits(project, repo_name):
     while url:
         print "==========================="
         print 'Getting commits: %s' % url
-        r = requests.get(url, auth=AUTH)
+        r = get_url(url, AUTH)
 
         print "Current rate limit remaining %s." %r.headers['x-ratelimit-remaining']
 
@@ -189,7 +195,7 @@ def parse_single_commit(args):
         return
 
     print "Parsing Commit: %s" % url
-    r = requests.get(url, auth=AUTH)
+    r = get_url(url, auth=AUTH)
     commit_json_data = json.loads(r.text)
     contributor = {
         'id': None,
@@ -210,7 +216,7 @@ def parse_single_commit(args):
             print("Searching GitHub for %s " % contributor['username'])
 
             # see if we can find the user on github to get their info...
-            response = requests.get('https://api.github.com/users/%s' % contributor['username'],
+            response = get_url('https://api.github.com/users/%s' % contributor['username'],
                                     auth=AUTH)
 
             if response.status_code == 200:
