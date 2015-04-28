@@ -30,20 +30,25 @@ function getCommits(project_id, contributor_id) {
     var cf = {};
     window.cf = cf;
     cf.data = crossfilter();
+
+    // crossfilter dimensions allow indexing of these returned values for quick processing
     cf.dimensions = {
         username: cf.data.dimension(function (commit) {
             return getContribRepr(commit.contributor);
         }),
-        project_number: cf.data.dimension(function (commit) {
-            return commit.project.project_number;
+        projectNumber: cf.data.dimension(function (commit) {
+            return commit.project.projectNumber;
         })
     };
 
+    // groups based upon dimensions
     cf.groups = {
         username: cf.dimensions.username.group(function (username) {
             return username;
         }),
-        project_number: cf.dimensions.project_number.group()
+        projectNumber: cf.dimensions.projectNumber.group(function (projectNumber) {
+            return projectNumber;
+        })
     };
 
 

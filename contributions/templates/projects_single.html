@@ -34,7 +34,7 @@
 {% block scripts %}
 <script type="application/javascript">
     var project_id = {{ project.key.id() }};
-    getCommits(project_id).then(function (data) {
+    getCommits(projectId).then(function (data) {
         cf.data.add(data.objects);
 
 
