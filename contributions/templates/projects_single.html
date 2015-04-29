@@ -36,6 +36,14 @@
                 <h4 class="chart-title">File Types Committed</h4>
 
                 <div id="files-chart"></div>
+
+
+            </div>
+            <div class="well well-sm clearfix">
+                <h4 class="chart-title">Commits By Time of Day</h4>
+
+                <div id="time-chart"></div>
+
             </div>
         </div>
 
@@ -85,6 +93,10 @@
 
         var filesChart = cf.charts.files('#files-chart');
         filesChart.render();
+
+        var timeChart = cf.charts.timeOfDay('#time-chart');
+        timeChart.render();
+
     });
 </script>
 {% endblock %}

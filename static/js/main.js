@@ -127,13 +127,18 @@ function getCommits(project_id, contributor_id) {
         }),
         day: cf.data.dimension(function (commit) {
             var d = new Date(commit.date);
-            d = d.addHours(7);
+            d = d.addHours(-7);
             d.setHours(0, 0, 0, 0);
             return d;
         }),
+        timeOfDay: cf.data.dimension(function (commit) {
+            var d = new Date(commit.date);
+            d = d.addHours(-7);
+            return d.getHours();
+        }),
         dayOfWeek: cf.data.dimension(function (commit) {
             var d = new Date(commit.date);
-            return d.addHours(7).getDay();
+            return d.addHours(-7).getDay();
         }),
         files: cf.data.dimension(function (commit) {
             return commit.files;
@@ -147,6 +152,7 @@ function getCommits(project_id, contributor_id) {
         username: cf.dimensions.username.group(),
         projectNumber: cf.dimensions.projectNumber.group(),
         day: cf.dimensions.day.group(),
+        timeOfDay: cf.dimensions.timeOfDay.group(),
         dayOfWeek: cf.dimensions.dayOfWeek.group()
     };
 
@@ -283,9 +289,38 @@ function getCommits(project_id, contributor_id) {
                     return '';
                 })
                 .colors(d3.scale.category20())
-                .legend(dc.legend().x(10).y(height/5).itemHeight(13).gap(5));
+                .legend(dc.legend().x(10).y(height / 5).itemHeight(13).gap(5));
             self.filter = function () {
             };
+            return self;
+        },
+        timeOfDay: function (id) {
+            var self = dc.barChart(id),
+                height = Math.min($(id).parent().width(), 400);
+
+            self.margins({top: 20, right: 10, left: 25, bottom: 20})
+                .width($(id).parent().width())
+                .height(height)
+                .dimension(cf.dimensions.timeOfDay)
+                .group(cf.groups.timeOfDay)
+                .x(d3.scale.linear().domain([0, 23]))
+                .centerBar(true)
+                .elasticY(true)
+                .elasticX(true)
+                .brushOn(true)
+                .label(function (d) {
+                    return d.key % 12;
+                })
+                .colorAccessor(function (d) {
+                    if (d.key < 8) {
+                        return 1;
+                    }
+                    if (d.key > 18) {
+                        return 2;
+                    }
+                    return 0;
+                });
+
             return self;
         }
     };
