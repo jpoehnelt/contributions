@@ -95,6 +95,17 @@ function getCommits(project_id, contributor_id) {
                 .elasticX(true);
             return self;
         },
+        project: function (id) {
+            var self = dc.rowChart(id);
+            self.width($(id).parent().width())
+                .height(225)
+                .margins({top: 10, left: 10, right: 10, bottom: 20})
+                .group(cf.groups.projectNumber)
+                .dimension(cf.dimensions.projectNumber)
+                .colors(d3.scale.category20())
+                .elasticX(true);
+            return self;
+        },
         overTime: function (id) {
             var self = dc.lineChart(id);
             self.width($(id).parent().width())
