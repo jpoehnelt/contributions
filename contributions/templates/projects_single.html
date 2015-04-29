@@ -31,7 +31,15 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-3">
+            <div class="well well-sm clearfix">
+                <h4 class="chart-title">File Types Committed</h4>
+
+                <div id="files-chart"></div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
             <div class="well well-sm clearfix">
                 <table class="table table-striped table-condensed" id="table">
                     <thead>
@@ -74,6 +82,9 @@
 
          var table = cf.charts.table('#table', cf.dimensions.sha);
         table.render();
+
+        var filesChart = cf.charts.files('#files-chart');
+        filesChart.render();
     });
 </script>
 {% endblock %}

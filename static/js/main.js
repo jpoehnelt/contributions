@@ -3,7 +3,7 @@ Date.prototype.addHours = function (h) {
     return this;
 };
 
-var ANON = true;
+var ANON = false;
 var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function getContribRepr(contributor) {
@@ -31,11 +31,88 @@ function getCommits(project_id, contributor_id) {
     });
 }
 
+
 (function () {
     "use strict";
     var cf = {};
     window.cf = cf;
     cf.data = crossfilter();
+
+    function reduceAddFile(p, v) {
+        p.count += v.files.length;//
+        for (var i = 0; i < v.files.length; i++) {
+            var filenamePieces = v.files[i].filename.split('.');
+            var filenameExt = filenamePieces[filenamePieces.length - 1];
+            switch (filenameExt) {
+                case 'py':
+                    p.python.sum++;
+                    break;
+                case 'css':
+                    p.css.sum++;
+                    break;
+                case 'html':
+                    p.html.sum++;
+                    break;
+                case 'js':
+                    p.js.sum++;
+                    break;
+                default:
+                    p.other.sum++;
+            }
+        }
+        return p;
+    }
+
+    function reduceRemoveFile(p, v) {
+        p.count -= v.files.length;//
+        for (var i = 0; i < v.files.length; i++) {
+            var filenamePieces = v.files[i].filename.split('.');
+            var filenameExt = filenamePieces[filenamePieces.length - 1];
+            switch (filenameExt) {
+                case 'py':
+                    p.python.sum--;
+                    break;
+                case 'css':
+                    p.css.sum--;
+                    break;
+                case 'html':
+                    p.html.sum--;
+                    break;
+                case 'js':
+                    p.js.sum--;
+                    break;
+                default:
+                    p.other.sum--;
+            }
+        }
+        return p;
+    }
+
+    function reduceInitFile() {
+        return {
+            count: 0,
+            python: {
+                sum: 0,
+                avg: 0
+            },
+            js: {
+                sum: 0,
+                avg: 0
+            },
+            css: {
+                sum: 0,
+                avg: 0
+            },
+            html: {
+                sum: 0,
+                avg: 0
+            },
+            other: {
+                sum: 0,
+                avg: 0
+            }
+        };
+    }
 
     // crossfilter dimensions allow indexing of these returned values for quick processing
     cf.dimensions = {
@@ -57,12 +134,16 @@ function getCommits(project_id, contributor_id) {
         dayOfWeek: cf.data.dimension(function (commit) {
             var d = new Date(commit.date);
             return d.addHours(7).getDay();
+        }),
+        files: cf.data.dimension(function (commit) {
+            return commit.files;
         })
     };
 
     // groups based upon dimensions
     cf.groups = {
         sha: cf.dimensions.sha.group(),
+        files: cf.dimensions.projectNumber.group().reduce(reduceAddFile, reduceRemoveFile, reduceInitFile),
         username: cf.dimensions.username.group(),
         projectNumber: cf.dimensions.projectNumber.group(),
         day: cf.dimensions.day.group(),
@@ -164,6 +245,47 @@ function getCommits(project_id, contributor_id) {
                 })
                 .order(d3.descending);
 
+            return self;
+        },
+        files: function (id) {
+            var self = dc.barChart(id),
+                height = Math.min($(id).parent().width(), 400);
+            self.margins({top: 20, right: 20, left: 100, bottom: 20})
+                .width($(id).parent().width())
+                .height(height)
+                .gap(1)
+                .dimension(cf.dimensions.files)
+                .group(cf.groups.files, 'Python')
+                .valueAccessor(function (d) {
+                    return d.value.python.sum;
+                })
+                .stack(cf.groups.files, 'JS', function (d) {
+                    return d.value.js.sum;
+                })
+                .stack(cf.groups.files, 'HTML', function (d) {
+                    return d.value.html.sum;
+                })
+                .stack(cf.groups.files, 'CSS', function (d) {
+                    return d.value.css.sum;
+                })
+                .stack(cf.groups.files, 'Other', function (d) {
+                    return d.value.other.sum;
+                })
+                .x(d3.scale.ordinal().domain(cf.groups.files.top(Infinity).map(function (p) {
+                    return p.key;
+                })))
+                .xUnits(dc.units.ordinal)
+                .centerBar(false)
+                .elasticY(true)
+                .elasticX(true)
+                .brushOn(false)
+                .label(function () {
+                    return '';
+                })
+                .colors(d3.scale.category20())
+                .legend(dc.legend().x(10).y(height/5).itemHeight(13).gap(5));
+            self.filter = function () {
+            };
             return self;
         }
     };
