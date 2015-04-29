@@ -46,7 +46,7 @@ function getCommits(project_id, contributor_id) {
             return getContribRepr(commit.contributor);
         }),
         projectNumber: cf.data.dimension(function (commit) {
-            return commit.project.projectNumber;
+            return commit.project.name;
         }),
         day: cf.data.dimension(function (commit) {
             var d = new Date(commit.date);
