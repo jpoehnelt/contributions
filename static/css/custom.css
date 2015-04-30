@@ -1,8 +1,10 @@
 body {
     padding-top: 50px;
+    background-color: #ebf6ff;
 }
 
 .chart-title {
     margin: 4px 10px 0 10px;
     text-align: center;
 }
+
