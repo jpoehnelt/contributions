@@ -6,7 +6,45 @@
             {% if user %}
             <h1>Hello {{ user }}!</h1>
             {%else %}
-            <h1>Hello World!</h1>
+            <!-- Jumbotron Header -->
+            <header class="jumbotron">
+                <h1>Contributions</h1>
+                <p>Contributions allows you to visually understand the commits of your project.</p>
+                </p>
+            </header>
+
+            <br>
+
+            <div class="row text-center">
+
+            <div class="col-md-4 col-sm-8">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>Projects</h3>
+                        <p>See how often projects are worked on.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-8">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>Commits</h3>
+                        <p>See when commits happens.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-8">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>Contributors</h3>
+                        <p>See who is making contributions.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
             {% endif %}
         </div>
     </div>
