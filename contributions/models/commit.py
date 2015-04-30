@@ -10,9 +10,9 @@ class File(ndb.Model):
     additions = ndb.IntegerProperty()
     deletions = ndb.IntegerProperty()
     changes = ndb.IntegerProperty()
-    blob_url = ndb.StringProperty()
+    # blob_url = ndb.StringProperty()
     contents_url = ndb.StringProperty()
-    raw_url = ndb.StringProperty()
+    # raw_url = ndb.StringProperty()
     sha = ndb.StringProperty()
 
 

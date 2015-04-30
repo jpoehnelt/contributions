@@ -17,8 +17,7 @@ PROJECT_API_URL = OUR_WEBSITE_URL + 'api/project'
 CONTRIBUTOR_API_URL = OUR_WEBSITE_URL + 'api/contributor'
 COMMIT_API_URL = OUR_WEBSITE_URL + 'api/commit'
 
-ALLOWED_FIELDS_FOR_FILES = ['filename', 'sha', 'additions', 'deletions', 'changes', 'contents_url',
-                            'raw_url', 'blob_url']
+ALLOWED_FIELDS_FOR_FILES = ['filename', 'sha', 'additions', 'deletions', 'changes', 'contents_url']
 
 ALL_REPOS_COMMITS_URLS = []
 
