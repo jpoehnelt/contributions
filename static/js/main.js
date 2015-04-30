@@ -33,7 +33,7 @@ function getCommits(project_id, contributor_id) {
 
 function getAllCommits() {
     "use strict";
-    return $.ajax({ method: "GET", url: "/static/all_commits.txt"});
+    return $.ajax({ method: "GET", url: "/static/all_commits.json"});
 }
 
 (function () {
@@ -299,7 +299,7 @@ function getAllCommits() {
             return self;
         },
         timeOfDay: function (id) {
-            var self = dc.barChart(id),
+            var self = dc.rowChart(id),
                 height = Math.min($(id).parent().width(), 400);
 
             self.margins({top: 20, right: 10, left: 25, bottom: 20})
@@ -307,14 +307,6 @@ function getAllCommits() {
                 .height(height)
                 .dimension(cf.dimensions.timeOfDay)
                 .group(cf.groups.timeOfDay)
-                .x(d3.scale.linear().domain([0, 23]))
-                .centerBar(true)
-                .elasticY(true)
-                .elasticX(true)
-                .brushOn(true)
-                .label(function (d) {
-                    return d.key % 12;
-                })
                 .colorAccessor(function (d) {
                     if (d.key < 8) {
                         return 1;
