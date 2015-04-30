@@ -4,24 +4,28 @@
     <div class="row">
         <div class="col-xs-12">
             {% if user %}
-            <h1>Hello {{ user }}!</h1>
-            {% else %}
-            <h1>All Contributors!</h1>
-            <table class="table table-striped">
-            	<th>GitHub Username</th>
-            	<th>GitHub Avatar</th>
-            	<tr>
-            		{% for contrib in contribs %}
-            		<tr>
-            			<td><a href="/contributors/{{ contrib.key.id() }}">{{ contrib.username }}</a></td>
-            			<td>
-            				<a href="/contributors/{{ contrib.key.id() }}">
-            					<img style="max-width: 80px; max-height: 80px;" src="{{ contrib.avatar_url }}">
-            				</a>
-            			</td>
-            		</tr>
-            		{% endfor %}
-            </table>
+                <h1>Hello {{ user }}!</h1>
+                {% else %}
+                <h1>All Contributors</h1><hr>
+
+                {% for contrib in contribs %}
+                {% if loop.index is divisibleby 2 %} <div class="row">{% endif %}
+                    <div class="col-xs-6">
+                    <ul class="list-group">
+                        <li class="list-group-item heading clearfix">
+                            <a href="/contributors/{{ contrib.key.id() }}">
+                                    <img class="img-thumbnail" style="max-width: 70px; max-height: 70px;" src="{{ contrib.avatar_url }}">
+                            </a>
+                            <span class="pull-right">
+                            <a href="/contributors/{{ contrib.key.id() }}">
+                            {% if user %}{{ contrib.username }}{% else %}{{ contrib.key.id() }}{% endif %}
+                            </a>
+                            </span>
+                        </li>
+                    </ul>
+                    </div><!--/.col-xs-6-->
+                    {% if loop.index is divisibleby 2 %} </div>{% endif %}<!--/.row-->
+                {% endfor %}
             {% endif %}
         </div>
     </div>
@@ -29,8 +33,26 @@
 {% endblock %}
 {% block scripts %}
 <script type="application/javascript">
-	$(window).load(function(){
-		hideLoadingSpinner();
-	})
+    // what do I put here?
+   /* showLoadingSpinner();
+
+    getAllCommits().then(function (data) {
+
+        cf.data.add(data.objects);
+        hideLoadingSpinner();
+
+        var dayOfWeekChart = cf.charts.dayOfWeek('#day-of-week-chart');
+        dayOfWeekChart.render();
+
+
+        var dayChart = cf.charts.overTime('#day-chart');
+        dayChart.render();
+
+        var contributorChart = cf.charts.contributor('#contributor-chart');
+        contributorChart.render();
+
+         var table = cf.charts.table('#table', cf.dimensions.sha);
+        table.render();
+    }); */
 </script>
 {% endblock %}
