@@ -11,18 +11,15 @@
                 {% for contrib in contribs %}
                 {% if loop.index is divisibleby 2 %} <div class="row">{% endif %}
                     <div class="col-xs-6">
-                    <ul class="list-group">
-                        <li class="list-group-item heading clearfix">
-                            <a href="/contributors/{{ contrib.key.id() }}">
-                                    <img class="img-thumbnail" style="max-width: 70px; max-height: 70px;" src="{{ contrib.avatar_url }}">
+                        <div class="list-group">
+                            <!--<li class="list-group-item heading clearfix">-->
+                            <a href="/contributors/{{ contrib.key.id() }}" class="list-group-item">
+                                <img class="img-thumbnail" style="max-width: 70px; max-height: 70px;" src="{{ contrib.avatar_url }}">
+                                <span class="pull-right">
+                                    {% if user %}{{ contrib.username }}{% else %}{{ contrib.key.id() }}{% endif %}
+                                </span>
                             </a>
-                            <span class="pull-right">
-                            <a href="/contributors/{{ contrib.key.id() }}">
-                            {% if user %}{{ contrib.username }}{% else %}{{ contrib.key.id() }}{% endif %}
-                            </a>
-                            </span>
-                        </li>
-                    </ul>
+                        </div><!--/.list-group-->
                     </div><!--/.col-xs-6-->
                     {% if loop.index is divisibleby 2 %} </div>{% endif %}<!--/.row-->
                 {% endfor %}
@@ -34,6 +31,7 @@
 {% block scripts %}
 <script type="application/javascript">
     // what do I put here?
+   var data = $.ajax({ method: "GET", url: "/static/all_commits.txt"});
    /* showLoadingSpinner();
 
     getAllCommits().then(function (data) {
