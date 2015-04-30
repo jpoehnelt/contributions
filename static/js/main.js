@@ -144,6 +144,13 @@ function getAllCommits() {
             var d = new Date(commit.date);
             return d.addHours(-7).getDay();
         }),
+        /* take the existing day function and modify it to return the difference between the commit.date and the project due date */
+        priorToDueDate: cf.data.dimension(function (commit) {
+            var d = new Date(commit.date);
+            d = d.addHours(-7);
+            /* return difference between d and dueDates[commit.project.project_number] */
+            return d;
+        }),
         files: cf.data.dimension(function (commit) {
             return commit.files;
         })
@@ -157,7 +164,8 @@ function getAllCommits() {
         projectNumber: cf.dimensions.projectNumber.group(),
         day: cf.dimensions.day.group(),
         timeOfDay: cf.dimensions.timeOfDay.group(),
-        dayOfWeek: cf.dimensions.dayOfWeek.group()
+        dayOfWeek: cf.dimensions.dayOfWeek.group(),
+        priorToDueDate: cf.dimensions.priorToDueDate.group()
     };
 
     cf.charts = {
@@ -307,6 +315,27 @@ function getAllCommits() {
                 .height(height)
                 .dimension(cf.dimensions.timeOfDay)
                 .group(cf.groups.timeOfDay)
+                .colorAccessor(function (d) {
+                    if (d.key < 8) {
+                        return 1;
+                    }
+                    if (d.key > 18) {
+                        return 2;
+                    }
+                    return 0;
+                });
+
+            return self;
+        },
+        priorToDueDate: function (id) {
+            var self = dc.rowChart(id),
+                height = Math.min($(id).parent().width(), 400);
+
+            self.margins({top: 20, right: 10, left: 25, bottom: 20})
+                .width($(id).parent().width())
+                .height(height)
+                .dimension(cf.dimensions.priorToDueDate)
+                .group(cf.groups.priorToDueDate)
                 .colorAccessor(function (d) {
                     if (d.key < 8) {
                         return 1;

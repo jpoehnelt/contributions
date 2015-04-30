@@ -51,6 +51,17 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+    <div class="col-md-12">
+            <div class="well well-sm clearfix">
+                <h4 class="chart-title">Commits Before Deadline</h4>
+                <div id="deadline-chart"></div>
+
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="well well-sm clearfix">
@@ -85,7 +96,6 @@
         var dayOfWeekChart = cf.charts.dayOfWeek('#day-of-week-chart');
         dayOfWeekChart.render();
 
-
         var dayChart = cf.charts.overTime('#day-chart');
         dayChart.render();
 
@@ -100,6 +110,9 @@
 
         var timeChart = cf.charts.timeOfDay('#time-chart');
         timeChart.render();
+
+        var deadlineChart = cf.charts.priorToDueDate('#deadline-chart');
+        deadlineChart.render();
     });
 </script>
 {% endblock %}
