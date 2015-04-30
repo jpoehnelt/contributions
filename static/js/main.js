@@ -149,6 +149,7 @@ function getAllCommits() {
             var d = new Date(commit.date);
             d = d.addHours(-7);
             /* return difference between d and dueDates[commit.project.project_number] */
+
             return d;
         }),
         files: cf.data.dimension(function (commit) {
