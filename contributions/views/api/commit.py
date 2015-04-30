@@ -7,6 +7,8 @@ from contributions.exceptions import NotFoundException, ReferentialIntegrityErro
 from google.appengine.ext import ndb
 import datetime
 import logging
+import math
+
 
 class CommitApi(ApiRequest):
     def get(self, id=None):
@@ -15,6 +17,11 @@ class CommitApi(ApiRequest):
         :param id:
         :return:
         """
+
+        if self.get_cached_response() is not None:
+            self.return_cached_response()
+            return
+
         if id is None:
             if 'project_id' in self.request.GET and 'contributor_id' in self.request.GET:
                 # get all commits for a specific project and contributor
@@ -36,19 +43,40 @@ class CommitApi(ApiRequest):
             else:
                 qry = Commit.query()
 
-            commits = qry.fetch()
-            data = {
-                "objects": commits,
-                "num_results": len(commits),
-                "page": 1
-            }
+            try:
+                page_size = self.request.get('page_size', 500, False)
+                num_results = qry.count()
+
+                if page_size == 'all':
+                    page = 1
+                    commits = qry.fetch()
+                    num_pages = 1
+                else:
+                    page_size = int(page_size)
+                    page = int(self.request.get('page', 1, False))
+                    offset = (page - 1) * page_size
+                    commits = qry.fetch(limit=page_size, offset=offset)
+                    num_pages = int(math.ceil(num_results / page_size))
+
+                data = {
+                    "objects": commits,
+                    "num_results": num_results,
+                    "page": page,
+                    "num_pages": num_pages
+                }
+
+            except Exception as e:
+                logging.info(e)
+                self.abort(500)
+            else:
+                self.jsonify(data, cache_time=60*30)
+
 
         else:
             data = Commit.get_by_id(id)
             if data is None:
                 raise NotFoundException()
-
-        self.jsonify(data)
+            self.jsonify(data)
 
     @required_json_attributes('id', 'contributor', 'project')
     def post(self, id=None):
