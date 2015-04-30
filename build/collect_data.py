@@ -57,7 +57,7 @@ RETRIES = 5
 
 def get_current_commits():
     print 'Getting current commits... this may take awhile'
-    for commit in json.loads(get_url(COMMIT_API_URL, timeout=60).text)['objects']:
+    for commit in json.loads(get_url(COMMIT_API_URL + '?page_size=all', timeout=160).text)['objects']:
         commits.append(commit['id'])
 
     print commits
