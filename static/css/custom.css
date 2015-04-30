@@ -8,6 +8,19 @@ body {
     text-align: center;
 }
 
+.navbar-default {
+  background-color: #0a2d8a;
+  border-color: #ffffff;
+}
+
+.navbar-default .navbar-brand {
+  color: #ffffff;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #ffffff;
+}
+
 .jumbotron {
   padding: 30px;
   margin-bottom: 30px;
