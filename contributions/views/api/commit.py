@@ -56,7 +56,7 @@ class CommitApi(ApiRequest):
                     page = int(self.request.get('page', 1, False))
                     offset = (page - 1) * page_size
                     commits = qry.fetch(limit=page_size, offset=offset)
-                    num_pages = int(math.ceil(num_results + 0.00 / page_size))
+                    num_pages = int(math.ceil((num_results + 0.00) / page_size))
                     logging.info('offset: %d, page: %d, page_size: %d, num_pages: %d, results: %d' %(offset, page, page_size, num_pages, len(commits)))
 
                 logging.info(len(commits))
