@@ -10,8 +10,8 @@ STUDENTS_FILE = 'students.json'
 COMMITS_FILE = 'commits.json'
 
 JSON_HEADERS = {'Content-Type': 'application/json'}
-OUR_WEBSITE_URL = 'http://contributions-907.appspot.com/'
-# OUR_WEBSITE_URL = 'http://localhost:8080/'
+# OUR_WEBSITE_URL = 'http://contributions-907.appspot.com/'
+OUR_WEBSITE_URL = 'http://localhost:8080/'
 
 PROJECT_API_URL = OUR_WEBSITE_URL + 'api/project'
 CONTRIBUTOR_API_URL = OUR_WEBSITE_URL + 'api/contributor'
@@ -265,14 +265,34 @@ def parse_single_commit(args):
     # add contributor to datastore
     save_contributor(contributor)
 
-    files = []
+    files_total = 0
+    files_python = 0
+    files_js = 0
+    files_html = 0
+    files_css = 0
+    files_other = 0
+
+
     # remove all fields not in file model. for example previous_file
+    DONT_COUNT = ['lib/', 'node_modules', '.pyc', '.min.js']
     for commit_file in commit_json_data['files']:
-        single_file = {}
-        for field, value in commit_file.iteritems():
-            if field in ALLOWED_FIELDS_FOR_FILES:
-                single_file[field] = value
-        files.append(single_file)
+        if any([x in commit_file['filename'] for x in DONT_COUNT]):
+            continue
+        if '.py' in commit_file['filename']:
+            files_python += 1
+
+        elif 'js' in commit_file['filename']:
+            files_js += 1
+
+        elif '.css' in commit_file['filename']:
+            files_css += 1
+
+        elif 'html' in commit_file['filename']:
+            files_html += 1
+        else:
+            files_other += 1
+
+        files_total += 1
 
     commit_data = {
         'id': commit_json_data['sha'],
@@ -283,7 +303,12 @@ def parse_single_commit(args):
         'changes': commit_json_data['stats']['total'],
         'additions': commit_json_data['stats']['additions'],
         'deletions': commit_json_data['stats']['deletions'],
-        'files': files
+        'files_total': files_total,
+        'files_python': files_python ,
+        'files_js': files_js,
+        'files_html': files_html,
+        'files_css': files_css ,
+        'files_other': files_other
     }
 
 
