@@ -15,7 +15,9 @@ function getContribRepr(contributor) {
 
 function getCommits(project_id, contributor_id) {
     "use strict";
-    var url = "/api/commit?";
+    var defer = $.Deferred(),
+        url = "/api/commit?",
+        commits = [], promises = [];
 
     if (project_id) {
         url += "project_id=" + String(project_id) + "&";
@@ -25,15 +27,46 @@ function getCommits(project_id, contributor_id) {
         url += "contributor_id=" + String(contributor_id);
     }
 
-    return $.ajax({
+    $.ajax({
         method: "GET",
         url: url
+    }).then(function (response) {
+        // calculate the rest of the pages to get
+        commits = $.merge(response.objects, commits);
+        console.log(response);
+        if (response.num_pages === 1) {
+            defer.resolve(commits);
+        } else {
+            // get the other pages and resolve the promise when complete
+            for (var i = 2; i <= response.num_pages; i++) {
+                promises[i] = $.ajax({
+                    method: "GET",
+                    url: url + 'page=' + String(i)
+                }).then(function (reponse) {
+                    commits = $.merge(response.objects, commits);
+                });
+            }
+            //
+            // resolve the promise
+            $.when.apply($, promises).then(function () {
+                defer.resolve(commits)
+            })
+        }
+
+
     });
+
+    return defer.promise();
 }
 
 function getAllCommits() {
-    "use strict";
-    return $.ajax({ method: "GET", url: "/static/all_commits.json"});
+    var defer = $.Deferred();
+
+    $.ajax({ method: "GET", url: "/static/all_commits.json"}).then(function (response) {
+        defer.resolve(response.objects);
+    });
+
+    return defer.promise();
 }
 
 (function () {
@@ -43,52 +76,24 @@ function getAllCommits() {
     cf.data = crossfilter();
 
     function reduceAddFile(p, v) {
-        p.count += v.files.length;//
-        for (var i = 0; i < v.files.length; i++) {
-            var filenamePieces = v.files[i].filename.split('.');
-            var filenameExt = filenamePieces[filenamePieces.length - 1];
-            switch (filenameExt) {
-                case 'py':
-                    p.python.sum++;
-                    break;
-                case 'css':
-                    p.css.sum++;
-                    break;
-                case 'html':
-                    p.html.sum++;
-                    break;
-                case 'js':
-                    p.js.sum++;
-                    break;
-                default:
-                    p.other.sum++;
-            }
-        }
+        p.count += v.files_total;
+        p.python.sum += v.files_python;
+        p.js.sum += v.files_js;
+        p.css.sum += v.files_css;
+        p.html.sum += v.files_html;
+        p.other.sum += v.files_other;
+
         return p;
     }
 
     function reduceRemoveFile(p, v) {
-        p.count -= v.files.length;//
-        for (var i = 0; i < v.files.length; i++) {
-            var filenamePieces = v.files[i].filename.split('.');
-            var filenameExt = filenamePieces[filenamePieces.length - 1];
-            switch (filenameExt) {
-                case 'py':
-                    p.python.sum--;
-                    break;
-                case 'css':
-                    p.css.sum--;
-                    break;
-                case 'html':
-                    p.html.sum--;
-                    break;
-                case 'js':
-                    p.js.sum--;
-                    break;
-                default:
-                    p.other.sum--;
-            }
-        }
+        p.count -= v.files_total;//
+        p.python.sum -= v.files_python;
+        p.js.sum -= v.files_js;
+        p.css.sum -= v.files_css;
+        p.html.sum -= v.files_html;
+        p.other.sum -= v.files_other;
+
         return p;
     }
 
@@ -96,24 +101,19 @@ function getAllCommits() {
         return {
             count: 0,
             python: {
-                sum: 0,
-                avg: 0
+                sum: 0
             },
             js: {
-                sum: 0,
-                avg: 0
+                sum: 0
             },
             css: {
-                sum: 0,
-                avg: 0
+                sum: 0
             },
             html: {
-                sum: 0,
-                avg: 0
+                sum: 0
             },
             other: {
-                sum: 0,
-                avg: 0
+                sum: 0
             }
         };
     }
@@ -127,7 +127,10 @@ function getAllCommits() {
             return getContribRepr(commit.contributor);
         }),
         projectNumber: cf.data.dimension(function (commit) {
-            return commit.project.name;
+            return commit.project.project_number;
+        }),
+        project: cf.data.dimension(function (commit) {
+            return commit.project.project_number + ": " + String(commit.project.id) + ": " + commit.project.name;
         }),
         day: cf.data.dimension(function (commit) {
             var d = new Date(commit.date);
@@ -144,14 +147,6 @@ function getAllCommits() {
             var d = new Date(commit.date);
             return d.addHours(-7).getDay();
         }),
-        /* take the existing day function and modify it to return the difference between the commit.date and the project due date */
-        priorToDueDate: cf.data.dimension(function (commit) {
-            var d = new Date(commit.date);
-            d = d.addHours(-7);
-            /* return difference between d and dueDates[commit.project.project_number] */
-
-            return d;
-        }),
         files: cf.data.dimension(function (commit) {
             return commit.files;
         })
@@ -163,10 +158,10 @@ function getAllCommits() {
         files: cf.dimensions.projectNumber.group().reduce(reduceAddFile, reduceRemoveFile, reduceInitFile),
         username: cf.dimensions.username.group(),
         projectNumber: cf.dimensions.projectNumber.group(),
+        project: cf.dimensions.project.group(),
         day: cf.dimensions.day.group(),
         timeOfDay: cf.dimensions.timeOfDay.group(),
-        dayOfWeek: cf.dimensions.dayOfWeek.group(),
-        priorToDueDate: cf.dimensions.priorToDueDate.group()
+        dayOfWeek: cf.dimensions.dayOfWeek.group()
     };
 
     cf.charts = {
@@ -184,26 +179,42 @@ function getAllCommits() {
                 .elasticX(true);
             return self;
         },
-        contributor: function (id) {
+        contributor: function (id, height) {
             var self = dc.rowChart(id);
+            height = height ? height : $(id).parent().width();
             self.width($(id).parent().width())
-                .height(225)
+                .height(height)
+                .gap(1)
                 .margins({top: 10, left: 10, right: 10, bottom: 20})
                 .group(cf.groups.username)
                 .dimension(cf.dimensions.username)
                 .colors(d3.scale.category20())
-                .elasticX(true);
+                .elasticX(true)
+                .ordering(function (d) {
+                    return -d.value;
+                });
+
             return self;
         },
-        project: function (id) {
+
+        project: function (id, height) {
             var self = dc.rowChart(id);
+            height = height ? height : $(id).parent().width();
             self.width($(id).parent().width())
-                .height(225)
-                .margins({top: 10, left: 10, right: 10, bottom: 20})
-                .group(cf.groups.projectNumber)
-                .dimension(cf.dimensions.projectNumber)
+                .height(height)
+                .margins({top: 10, left: 10, right: 10, bottom: 30})
+                .group(cf.groups.project)
+                .dimension(cf.dimensions.project)
                 .colors(d3.scale.category20())
-                .elasticX(true);
+                .elasticX(true)
+                .gap(1)
+                .label(function (d) {
+                    var pieces = d.key.split(":");
+                    return pieces[pieces.length - 1];
+                })
+                .ordering(function (d) {
+                    return d.key.split(":")[0] * 10000000 - d.value;
+                });
             return self;
         },
         overTime: function (id) {
@@ -223,7 +234,7 @@ function getAllCommits() {
         },
         table: function (id, dim) {
             var self = dc.dataTable(id);
-            self.dimension(dim)
+            self.dimension(cf.dimensions.project)
                 .width($(id).parent().width())
                 .group(function () {
                     return '';
@@ -268,7 +279,7 @@ function getAllCommits() {
         },
         files: function (id) {
             var self = dc.barChart(id),
-                height = Math.min($(id).parent().width(), 400);
+                height = Math.max(Math.min($(id).parent().width(), 400), 400);
             self.margins({top: 20, right: 20, left: 100, bottom: 20})
                 .width($(id).parent().width())
                 .height(height)
@@ -309,42 +320,35 @@ function getAllCommits() {
         },
         timeOfDay: function (id) {
             var self = dc.rowChart(id),
-                height = Math.min($(id).parent().width(), 400);
+                height = Math.max(Math.min($(id).parent().width(), 400), 400);
 
-            self.margins({top: 20, right: 10, left: 25, bottom: 20})
+            self.margins({top: 20, right: 10, left: 29, bottom: 20})
                 .width($(id).parent().width())
                 .height(height)
                 .dimension(cf.dimensions.timeOfDay)
                 .group(cf.groups.timeOfDay)
+                .colors(d3.scale.category20())
                 .colorAccessor(function (d) {
                     if (d.key < 8) {
-                        return 1;
+                        return 11;
                     }
                     if (d.key > 18) {
-                        return 2;
+                        return 18;
                     }
                     return 0;
-                });
-
-            return self;
-        },
-        priorToDueDate: function (id) {
-            var self = dc.rowChart(id),
-                height = Math.min($(id).parent().width(), 400);
-
-            self.margins({top: 20, right: 10, left: 25, bottom: 20})
-                .width($(id).parent().width())
-                .height(height)
-                .dimension(cf.dimensions.priorToDueDate)
-                .group(cf.groups.priorToDueDate)
-                .colorAccessor(function (d) {
-                    if (d.key < 8) {
-                        return 1;
+                }).label(function (d) {
+                    var xm, hour;
+                    if (d.key > 12) {
+                        xm = ' pm';
+                    } else {
+                        xm = ' am';
                     }
-                    if (d.key > 18) {
-                        return 2;
+                    hour = d.key % 12;
+                    if (hour === 0) {
+                        hour = 12;
                     }
-                    return 0;
+                    return String(hour) + xm;
+
                 });
 
             return self;
