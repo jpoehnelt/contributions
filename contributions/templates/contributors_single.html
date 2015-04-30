@@ -91,7 +91,7 @@
 
     getCommits(null, contribId).then(function (data) {
 
-        cf.data.add(data.objects);
+        cf.data.add(data);
         hideLoadingSpinner();
 
         var dayOfWeekChart = cf.charts.dayOfWeek('#day-of-week-chart');
