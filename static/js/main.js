@@ -32,8 +32,10 @@ function getCommits(project_id, contributor_id) {
         url: url
     }).then(function (response) {
         // calculate the rest of the pages to get
-        commits = $.merge(response.objects, commits);
-        console.log(response);
+        for (var k = 0; k < response.objects.length; k++) {
+            commits.push(response.objects[k]);
+        }
+
         if (response.num_pages === 1) {
             defer.resolve(commits);
         } else {
@@ -43,12 +45,17 @@ function getCommits(project_id, contributor_id) {
                     method: "GET",
                     url: url + 'page=' + String(i)
                 }).then(function (reponse) {
-                    commits = $.merge(response.objects, commits);
+                    console.log(response.objects.length);
+                    for (var j = 0; j < response.objects.length; j++) {
+                        commits.push(response.objects[j]);
+                    }
                 });
             }
             //
             // resolve the promise
             $.when.apply($, promises).then(function () {
+                                            console.log(commits);
+
                 defer.resolve(commits)
             })
         }
