@@ -31,6 +31,10 @@ function getCommits(project_id, contributor_id) {
     });
 }
 
+function getAllCommits() {
+    "use strict";
+    return $.ajax({ method: "GET", url: "/static/all_commits.txt"});
+}
 
 (function () {
     "use strict";
