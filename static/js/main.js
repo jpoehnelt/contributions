@@ -3,7 +3,7 @@ Date.prototype.addHours = function (h) {
     return this;
 };
 
-var ANON = false;
+var ANON = true;
 var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function getContribRepr(contributor) {
