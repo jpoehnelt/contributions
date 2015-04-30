@@ -168,7 +168,7 @@ function getAllCommits() {
         dayOfWeek: function (id) {
             var self = dc.rowChart(id);
             self.width($(id).parent().width())
-                .height(225)
+                .height(175)
                 .margins({top: 10, left: 10, right: 10, bottom: 20})
                 .group(cf.groups.dayOfWeek)
                 .dimension(cf.dimensions.dayOfWeek)
@@ -176,6 +176,7 @@ function getAllCommits() {
                 .label(function (d) {
                     return weekdays[d.key];
                 })
+                .gap(1)
                 .elasticX(true);
             return self;
         },
@@ -228,8 +229,8 @@ function getAllCommits() {
                 .elasticY(true)
                 .x(d3.time.scale().domain(d3.extent(cf.groups.day.top(Infinity), function (d) {
                     return d.key;
-                })))
-                .renderHorizontalGridLines(true);
+                }))).xAxis().ticks(5);
+
             return self;
         },
         table: function (id, dim) {
@@ -327,6 +328,7 @@ function getAllCommits() {
                 .height(height)
                 .dimension(cf.dimensions.timeOfDay)
                 .group(cf.groups.timeOfDay)
+                .gap(1)
                 .colors(d3.scale.category20())
                 .colorAccessor(function (d) {
                     if (d.key < 8) {
