@@ -67,6 +67,10 @@
     <script type="application/javascript">
         showLoadingSpinner();
 
+        {% if user %}
+            setAnon(true);
+        {% endif %}
+
         getCommits().then(function (commits) {
 
             cf.data.add(commits);
