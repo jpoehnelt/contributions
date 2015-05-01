@@ -49,7 +49,21 @@
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ login_url }}">{% if user %}Sign Out{% else %}Sign In{% endif %}</a></li>
+                <li>{% if user %}
+                        <p class="navbar-text">
+                            {{ user.nickname() }}
+                        </p>
+                    {% endif %}
+                </li>
+                <li><a href="{{ login_url }}">
+                    <button class="btn btn-default btn-xs">
+                        {% if user %}
+                            Sign Out
+                        {% else %}
+                            Sign In
+                        {% endif %}
+                    </button></a>
+                </li>
             </ul>
         </div>
         <!--/.nav-collapse -->
