@@ -128,22 +128,6 @@ class TestCommitApi(unittest.TestCase):
             "changes": 5,
             "additions": 2,
             "deletions": 3,
-            "files": [
-                {
-                    "filename": 'asdf.html',
-                    "status": 'asdf',
-                    "changes": 5,
-                    "additions": 2,
-                    "deletions": 3,
-                },
-                {
-                    "filename": 'asdf123.py',
-                    "status": 'asdf',
-                    "changes": 5,
-                    "additions": 2,
-                    "deletions": 3,
-                }
-            ]
         }
 
         response = self.test_app.post('/api/commit', params=json.dumps(data),
@@ -178,22 +162,7 @@ class TestCommitApi(unittest.TestCase):
             "changes": 5,
             "additions": 2,
             "deletions": 3,
-            "files": [
-                {
-                    "filename": 'asdf.html',
-                    "status": 'asdf',
-                    "changes": 5,
-                    "additions": 2,
-                    "deletions": 3,
-                },
-                {
-                    "filename": 'asdf123.py',
-                    "status": 'asdf',
-                    "changes": 5,
-                    "additions": 2,
-                    "deletions": 3,
-                }
-            ]
+
         }
 
         response = self.test_app.post('/api/commit', params=json.dumps(data),
@@ -207,15 +176,6 @@ class TestCommitApi(unittest.TestCase):
             "changes": 123,
             "additions": 22,
             "deletions": 32,
-            "files": [
-                {
-                    "filename": 'asdf.html',
-                    "status": 'asdf',
-                    "changes": 5,
-                    "additions": 2,
-                    "deletions": 3,
-                }
-            ]
         }
 
         response = self.test_app.put('/api/commit', params=json.dumps(data_update),
