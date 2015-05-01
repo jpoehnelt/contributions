@@ -6,6 +6,14 @@ AUTH = ('cs399contributions', 'contributions399')
 EXCLUDE = ['cs413', 'cs480', 'cs386', 'capstone', 'cs345', 'daemon']
 
 
+def get_projects():
+    r = requests.get('http://contributions-907.appspot.com/api/project')
+
+    if r.status_code != 200:
+        raise Exception
+
+    return ["/".join([p['owner'], p['name']]).lower() for p in json.loads(r.text)['objects']]
+
 def get_contributors():
     """
     Gets contributors from our api
@@ -36,6 +44,8 @@ def get_atom_feed(user):
 if __name__ == "__main__":
     repos = {}
 
+    projects = get_projects()
+
     for user in get_contributors():
         for entry in get_atom_feed(user).entries:
             if 'push' not in entry.title:
@@ -44,6 +54,9 @@ if __name__ == "__main__":
             repo = "/".join(entry['link'].split('/compare')[0].split('/')[-2:])
 
             if any([x.lower() in repo.lower() for x in EXCLUDE]):
+                continue
+
+            if repo.lower() in projects:
                 continue
 
             if repo not in repos:
