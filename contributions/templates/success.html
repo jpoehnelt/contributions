@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            {% if user %}
+            <div class="alert alert-success">You are signed in as {{ user.nickname() }}</div>
+            {% else %}
+            <div class="well">
+                You are not logged in. Please <a href="{{ login_url }}">Sign In</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
