@@ -10,8 +10,8 @@ STUDENTS_FILE = 'students.json'
 COMMITS_FILE = 'commits.json'
 
 JSON_HEADERS = {'Content-Type': 'application/json'}
-# OUR_WEBSITE_URL = 'http://contributions-907.appspot.com/'
-OUR_WEBSITE_URL = 'http://localhost:8080/'
+OUR_WEBSITE_URL = 'http://contributions-907.appspot.com/'
+# OUR_WEBSITE_URL = 'http://localhost:8080/'
 
 PROJECT_API_URL = OUR_WEBSITE_URL + 'api/project'
 CONTRIBUTOR_API_URL = OUR_WEBSITE_URL + 'api/contributor'
@@ -28,7 +28,7 @@ GITHUB_REPOS = [
     ['Adam-Thomas/Band-Proj1', 'alecdavidson/joyful-waves', 'AustinAbhari/CS399_TheBand',
      'c1phr/cs399_band', 'cmh553/theBand', 'DylanGrayson/CS399_TheBand', 'itj3/bandPage',
      'justinwp/cs399-band', 'kbullins/CS399Band', 'lf237/band', 'lmk243/BandProject',
-     'sk367/cs399_band'],
+     'sk367/cs399_band', 'smashfligaeta/CS399_TheBand'],
     # theatre
     ['sk367/cs399_Theater', 'Adam-Thomas/Theatre-Proj2', 'brandonparee/theTheatre',
      'c1phr/cs399_theatre', 'dukeayers/cs399_theater', 'FlintyFalcon/Project2',
@@ -37,15 +37,15 @@ GITHUB_REPOS = [
     #agency
     ['alexlanza/cs399_agency', 'brandonparee/theAgency', 'dukeayers/cs399_agency',
      'DylanGrayson/Agency_Proj3', 'lf237/agency', 'kyleamcginn88/Agency', 'vtsyms/CS399Agency',
-     'yourbuddyconner/cs399-agency'],
+     'yourbuddyconner/cs399-agency', 'c1phr/cs399_agency', 'smashfligaeta/Agency_Proj3'],
     #social
     ['cmh553/cs399_social', 'coop741/CS399Social', 'c1phr/cs399_social',
      'DylanGrayson/social_proj4', 'dukeayers/cs399_SocialMedia', 'ErinBailey/cs399-social',
-     'yourbuddyconner/cs399-social'],
+     'yourbuddyconner/cs399-social', 'bsaganey/GoingSocial', 'helikaon00/Social', 'smashfligaeta/social_proj4'],
     #final
     ['breadraptor/cs399_final', 'cap377/cs399final', 'EduardoIniguez/CS399-final',
      'justinwp/contributions', 'alexlanza/CS399-Final', 'DylanGrayson/knobsock', 'lf237/project5',
-     'c1phr/cs399_final']
+     'c1phr/cs399_final', 'mitchellnau/finalproject']
 ]
 DUE_DATE_MAPPING = ["2015-01-23", "2015-02-06", "2015-02-20", "2015-04-03"]
 
@@ -89,7 +89,7 @@ def get_url(url, auth=None, timeout=4):
 def get_repo(repo_name, project_number):
     response = get_url('https://api.github.com/repos/' + repo_name, AUTH)
     repo_json_data = json.loads(response.text)
-
+    print repo_json_data
     # Create project in database
     data = {
         "id": repo_json_data['id'],
