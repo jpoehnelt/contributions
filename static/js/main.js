@@ -153,9 +153,6 @@ function getAllCommits() {
         dayOfWeek: cf.data.dimension(function (commit) {
             var d = new Date(commit.date);
             return d.addHours(-7).getDay();
-        }),
-        files: cf.data.dimension(function (commit) {
-            return commit.files;
         })
     };
 
@@ -292,7 +289,7 @@ function getAllCommits() {
                 .width($(id).parent().width())
                 .height(height)
                 .gap(1)
-                .dimension(cf.dimensions.files)
+                .dimension(cf.dimensions.projectNumber)
                 .group(cf.groups.files, 'Python')
                 .valueAccessor(function (d) {
                     return d.value.python.sum;
@@ -322,8 +319,8 @@ function getAllCommits() {
                 })
                 .colors(d3.scale.category20())
                 .legend(dc.legend().x(10).y(height / 5).itemHeight(13).gap(5));
-            self.filter = function () {
-            };
+//            self.filter = function () {
+//            };
             return self;
         },
         timeOfDay: function (id) {
