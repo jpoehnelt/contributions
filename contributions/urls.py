@@ -6,10 +6,12 @@ from views.contributors import ContributorsPage
 from views.api.project import ProjectApi
 from views.api.commit import CommitApi
 from views.api.contributor import ContributorApi
-
+from views.login import LoginPage, Success
 
 routes = [
     ('/', MainPage),
+    ('/login', LoginPage),
+    ('/success', Success),
     ('/about', AboutPage),
     ('/contact', ContactPage),
     ('/projects', ProjectsPage),
