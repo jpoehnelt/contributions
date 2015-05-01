@@ -181,7 +181,7 @@ function getAllCommits() {
                     return weekdays[d.key];
                 })
                 .gap(1)
-                .elasticX(true);
+                .elasticX(true).xAxis().ticks(5);
             return self;
         },
         contributor: function (id, height) {
@@ -201,7 +201,19 @@ function getAllCommits() {
 
             return self;
         },
-
+        projectNumber: function (id, height) {
+            var self = dc.rowChart(id);
+            height = height ? height : 150;
+            self.width($(id).parent().width())
+                .height(height)
+                .margins({top: 10, left: 10, right: 10, bottom: 30})
+                .group(cf.groups.projectNumber)
+                .dimension(cf.dimensions.projectNumber)
+                .colors(d3.scale.category20())
+                .elasticX(true)
+                .gap(1);
+            return self;
+        },
         project: function (id, height) {
             var self = dc.rowChart(id);
             height = height ? height : $(id).parent().width();
@@ -233,7 +245,7 @@ function getAllCommits() {
                 .elasticY(true)
                 .x(d3.time.scale().domain(d3.extent(cf.groups.day.top(Infinity), function (d) {
                     return d.key;
-                }))).xAxis().ticks(5);
+                }))).xAxis().ticks(7);
 
             return self;
         },
@@ -318,9 +330,9 @@ function getAllCommits() {
                     return '';
                 })
                 .colors(d3.scale.category20())
-                .legend(dc.legend().x(10).y(height / 5).itemHeight(13).gap(5));
-//            self.filter = function () {
-//            };
+                .legend(dc.legend().x(10).y(height / 5).itemHeight(13).gap(5))
+                .xAxis().ticks(5);
+
             return self;
         },
         timeOfDay: function (id) {
@@ -333,6 +345,7 @@ function getAllCommits() {
                 .dimension(cf.dimensions.timeOfDay)
                 .group(cf.groups.timeOfDay)
                 .gap(1)
+                .elasticX(true)
                 .colors(d3.scale.category20())
                 .colorAccessor(function (d) {
                     if (d.key < 8) {
@@ -355,7 +368,7 @@ function getAllCommits() {
                     }
                     return String(hour) + xm;
 
-                });
+                }).xAxis().ticks(5);;
 
             return self;
         }

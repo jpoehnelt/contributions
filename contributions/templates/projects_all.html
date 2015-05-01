@@ -30,6 +30,11 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="well well-sm clearfix">
+                                <h4 class="chart-title">Commits by Project</h4>
+
+                                <div id="project-number-chart"></div>
+                            </div>
+                            <div class="well well-sm clearfix">
                                 <h4 class="chart-title">File Types
                                     Committed</h4>
 
@@ -70,7 +75,6 @@
             var dayOfWeekChart = cf.charts.dayOfWeek('#day-of-week-chart');
             dayOfWeekChart.render();
 
-
             var dayChart = cf.charts.overTime('#day-chart');
             dayChart.render();
 
@@ -86,7 +90,9 @@
             var timeChart = cf.charts.timeOfDay('#time-chart');
             timeChart.render();
 
-            console.log(cf.groups.project.top(Infinity));
+            var projectNumberChart = cf.charts.projectNumber('#project-number-chart');
+            projectNumberChart.render();
+
         });
     </script>
     {% endblock %}
