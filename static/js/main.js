@@ -6,6 +6,15 @@ Date.prototype.addHours = function (h) {
 var ANON = true;
 var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+function setAnon(bool) {
+    if (bool == true) {
+        ANON = false;
+        return ANON;
+    }
+    ANON = true;
+    return ANON;
+}
+
 function getContribRepr(contributor) {
     if (ANON) {
         return contributor.id;
