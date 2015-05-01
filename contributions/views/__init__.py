@@ -11,7 +11,12 @@ class Request(webapp2.RequestHandler):
     """
     def __init__(self, *args, **kwargs):
         # inject user in request
+        self.login_url = "/my_page"
         self.user = users.get_current_user()
+        if self.user:
+            self.login_url = users.create_logout_url('/')
+        else:
+            self.login_url = users.create_login_url('/success')
 
         # call parent class to initialize
         super(Request, self).__init__(*args, **kwargs)

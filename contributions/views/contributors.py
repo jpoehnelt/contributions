@@ -22,7 +22,10 @@ class ContributorsPage(Request):
                     # get all their commits
                     qry = Commit.query().filter(Commit.contributor == contrib.key)
                     commits = qry.order(Commit.project).fetch()
-            self.render('contributors_single.html', {"contrib": contrib, "commits": commits})
+            self.render('contributors_single.html', {"contrib": contrib, "commits": commits,
+                                                     "user": self.user, "login_url": self.login_url})
         else:
             contribs = qry.fetch()
-            self.render('contributors_all.html', {"contribs": contribs} )
+            self.render('contributors_all.html', {"contribs": contribs,
+                                                  "user": self.user,
+                                                  "login_url": self.login_url} )
